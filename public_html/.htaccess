@@ -1,0 +1,17 @@
+AuthType Basic
+AuthName "Bellcom only"
+AuthUserFile /var/www/.htpasswd
+Satisfy Any
+require valid-user
+
+Order deny,allow
+Deny from all
+# internal posts
+Allow from 192.168.1.0/24
+Allow from 192.168.2.0/24
+# office
+Allow from 90.185.183.84
+
+RewriteEngine on  
+RewriteCond $1 !^(index\.php|design) 
+RewriteRule ^(.*)$ ./index.php/$1 [L]

@@ -1,0 +1,123 @@
+body {
+  font-size: 80%;
+  font-family: sans-serif;
+  padding: 1em;
+}
+
+h1,h2,h3 {
+  font-weight: bold;
+}
+
+h1 {
+  font-size: 120%;
+  margin: 1em 0 0.5em 0;
+}
+
+h2 {
+  font-size: 110%;
+}
+
+h3 {
+  font-size: 100%;
+}
+
+.header {
+  margin-bottom: 1em;
+}
+
+.header .menu {
+  margin-left: 0;
+  padding-left: 0;
+  display: inline;
+}
+  .header .menu li {
+    margin-left: 0;
+	list-style: none;
+	display: inline;
+  }
+
+  .header .menu li a {
+    text-decoration: none;
+  }
+
+.page ul {
+  margin-left: 1em;
+}
+
+.page li {
+  list-style: square;
+}
+
+#servers .xen0 {
+  padding: 1em;
+  margin-bottom: 1em;
+  border: 1px solid #cbcbcb;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  background-color: #cbcbcb;
+}
+
+#servers .xenu {
+  padding: 1em;
+  margin-bottom: 1em;
+  border: 1px solid #cbcbcb;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+#servers .xen0 h1 {
+  margin-top: 0;
+}
+
+#servers .xenu .info {
+  width: 200px;
+  float: left;
+}
+
+#servers .xenu .domains {
+  width: 400px;
+  float: left;
+}
+
+#servers .info dl dt {
+  float: left;
+}
+
+#servers .info dl dd {
+  margin-left: 7em;
+}
+
+.domains li.inactive a {
+  color: #cbcbcb;
+  text-decoration: line-through;
+}
+
+#messages {
+  padding: 1em;
+  float: right;
+  display: none;
+  position: fixed;
+  top: 10px;
+  right: 0;
+}
+
+#messages.error {
+  background-color: #f00;
+  font-weight: bold;
+}
+
+#messages.warning {
+  background-color: #fffc00;
+  font-weight: bold;
+}
+
+#messages.ok {
+  background-color: #00ce00;
+}
+
+.clr {
+  clear: both;
+}
