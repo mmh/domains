@@ -12,7 +12,7 @@ class ajaxHandler implements mvc\ActionHandler
         try
         {
           $sugar = sugarCrmConnector::getInstance(); 
-          $sugar->connect($sugaruser, $sugarpassword);
+          $sugar->connect(mvc\retrieve( 'config' )->sugarLogin, mvc\retrieve( 'config' )->sugarPassword);
 
           $input = '"'. $_GET['term'] .'%"';
           $accounts = array();

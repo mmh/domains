@@ -1,8 +1,11 @@
 <?php
-$sugarsoapaddress = "http://SUGARDOMAIN/soap.php";
-$sugarlogin = "LOGIN";
-$sugarpassword= "PASSWORD";
+return (object) array(
+    'sugarSoapAddress' => "http://SUGARDOMAIN/soap.php",
+    'sugarLogin'       => "LOGIN",
+    'sugarPassword'    => "PASSWORD",
 
-$dbname = "DBNAME";
-$dbusername = "DBUSER";
-$dbpassword = "DBPASSWORD";
+    'dbHost'           => "DBHOST",
+    'dbName'           => "DBNAME",
+    'dbUsername'       => "DBUSER",
+    'dbPassword'       => "DBPASSWORD",
+);

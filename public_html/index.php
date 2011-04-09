@@ -1,8 +1,10 @@
 <?php
 
 require 'includes/mimvic/uvic.php';
-include 'config.php';
 use MiMViC as mvc;  
+
+$config = require 'config.php';
+mvc\store('config',$config);
 
 require 'includes/redbean/rb.php';
 require 'includes/classes/class.ajaxHandler.php';
@@ -11,16 +13,9 @@ require 'includes/classes/class.dataCollectorHandler.php';
 require 'includes/functions.php';
 require 'includes/Mobile_Detect.php';
 
-switch ($_SERVER['SERVER_NAME']) 
-{
-  case 'domains.dev.hf':
-    R::setup('mysql:host=localhost;dbname=DBNAME','DBUSER','DBPASSWORD');
-    break;
-  case 'domains.bellcom.dk':
-    $dsn = 'mysql:host=localhost;dbname='.$dbname;
-    R::setup($dsn,$dbusername,$dbpassword);
-    break;
-}
+$dsn = 'mysql:host='.mvc\retrieve('config')->dbHost.';dbname='.mvc\retrieve('config')->dbName;
+R::setup($dsn,mvc\retrieve('config')->dbUser,mvc\retrieve('config')->dbPassword);
+// TODO: RedBean freeze schema
 
 $detect = new Mobile_Detect();
 
