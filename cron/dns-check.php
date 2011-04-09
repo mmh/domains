@@ -4,9 +4,13 @@
 * TODO - punycode domains, better return messages, do a lookup on * domains and only warn thats its not right
 */
 
-require 'includes/redbean/rb.php';
 
-R::setup('mysql:host=localhost;dbname=DBNAME','DBUSER','DBPASSWORD');
+require dirname(__FILE__).'/../public_html/includes/redbean/rb.php';
+include dirname(__FILE__).'/../public_html/config.php';
+
+$dsn = 'mysql:host=localhost;dbname='.$dbname;
+R::setup($dsn,$dbusername,$dbpassword);
+
 
 $servers = R::find('server');
 
