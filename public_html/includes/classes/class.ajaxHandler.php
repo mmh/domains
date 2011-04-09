@@ -37,7 +37,7 @@ class ajaxHandler implements mvc\ActionHandler
         {
           $owner = R::dispense("owner");
           $owner->name = $_GET['account_name'];
-          $owner->accountID = $_GET['account_id'];
+          $owner->account_id = $_GET['account_id'];
           $id = R::store($owner);
         }
 
@@ -49,7 +49,7 @@ class ajaxHandler implements mvc\ActionHandler
           $otherDomainsDefinedInVhost = R::find("domain","vhost_group_key = ?",array($domain->vhost_group_key));
           foreach ($otherDomainsDefinedInVhost as $otherDomain) 
           {
-            if ( $domain->type === 'name' )
+            if ( $otherDomain->type === 'name' )
             {
               continue;
             }
@@ -116,7 +116,30 @@ class ajaxHandler implements mvc\ActionHandler
 
         foreach ($results as $result )
         {
-          $json[] = array( 'id' => $result->id, 'label' => $result->name, 'value' => 'snaps', 'desc' => 'En hest' );
+          switch ($type) 
+          {
+            case 'server':
+              $desc = $result->name .' ('. $result->ip .')';
+              break;
+            case 'domain':
+              $servers = R::related( $result, 'server' );
+              $owners  = R::related( $result, 'owner' );
+              $serverDesc = array();
+              foreach ($servers as $server) 
+              {
+                $serverDesc[] = $server->name;
+              }
+
+              // there should only be one owner
+              if ( !empty($owners) )
+              {
+                $owner = ' owned by '. array_shift($owners)->name .' ';
+              }
+
+              $desc = 'Domain <a href="http://'.$result->name.'">'. $result->name .'</a> '. $owner .'exist on server'. ( (count($serverDesc)>0) ? 's' : '') .': '. implode(',',$serverDesc);
+              break;
+          }
+          $json[] = array( 'id' => $result->id, 'label' => $result->name, 'value' => 'snaps', 'desc' => $desc );
         }
 
         die (json_encode($json));
