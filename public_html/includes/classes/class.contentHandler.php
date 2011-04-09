@@ -34,8 +34,8 @@ class contentHandler implements mvc\ActionHandler
         foreach ( $owners as $owner ) 
         {
           $domains = R::related( $owner, 'domain' );
-          $accountToDomains[ $owner->accountID ]['owner'] = $owner;
-          $accountToDomains[ $owner->accountID ]['domains'] = $domains;
+          $accountToDomains[ $owner->account_id ]['owner'] = $owner;
+          $accountToDomains[ $owner->account_id ]['domains'] = $domains;
         }
         $data['accountToDomains'] = $accountToDomains;
 
