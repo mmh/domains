@@ -14,7 +14,7 @@ require 'includes/functions.php';
 require 'includes/Mobile_Detect.php';
 
 $dsn = 'mysql:host='.mvc\retrieve('config')->dbHost.';dbname='.mvc\retrieve('config')->dbName;
-R::setup($dsn,mvc\retrieve('config')->dbUser,mvc\retrieve('config')->dbPassword);
+R::setup($dsn,mvc\retrieve('config')->dbUsername,mvc\retrieve('config')->dbPassword);
 // TODO: RedBean freeze schema
 
 $detect = new Mobile_Detect();
