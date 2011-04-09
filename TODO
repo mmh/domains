@@ -2,6 +2,7 @@ TODO
 
 Er der noget TODO i på github som er bedre end en tekstfil?
 
+* Få adskildt passwords og sensitivt data i en fil for sig selv som kan excludes fra git
 * Behold kobling mellem account og domain selv hvis databasen bliver tømt for domæner og servere
 * Lav søgning efter server/domæne
 * Pænere visning af de domæner hvor DNS peger forkert
