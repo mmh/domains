@@ -1,6 +1,7 @@
 <?php
 
 require 'includes/mimvic/uvic.php';
+include 'config.php';
 use MiMViC as mvc;  
 
 require 'includes/redbean/rb.php';
@@ -16,7 +17,8 @@ switch ($_SERVER['SERVER_NAME'])
     R::setup('mysql:host=localhost;dbname=DBNAME','DBUSER','DBPASSWORD');
     break;
   case 'domains.bellcom.dk':
-    R::setup('mysql:host=localhost;dbname=DBNAME','DBUSER','DBPASSWORD');
+    $dns = 'mysql:host=localhost;dbname='.$dbname;
+    R::setup($dns,$dbusername,$dbpassword);
     break;
 }
 
