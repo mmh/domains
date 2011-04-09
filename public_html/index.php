@@ -18,7 +18,7 @@ switch ($_SERVER['SERVER_NAME'])
     break;
   case 'domains.bellcom.dk':
     $dsn = 'mysql:host=localhost;dbname='.$dbname;
-    R::setup($dns,$dbusername,$dbpassword);
+    R::setup($dsn,$dbusername,$dbpassword);
     break;
 }
 
