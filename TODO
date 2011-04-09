@@ -1,0 +1,9 @@
+TODO
+
+Er der noget TODO i på github som er bedre end en tekstfil?
+
+* Behold kobling mellem account og domain selv hvis databasen bliver tømt for domæner og servere
+* Lav søgning efter server/domæne
+* Pænere visning af de domæner hvor DNS peger forkert
+* Sortering af servere?
+* Få rullet collectHostStats.php ud overalt  
