@@ -1,0 +1,8 @@
+<?php
+$sugarsoapaddress = "http://SUGARDOMAIN/soap.php";
+$sugarlogin = "LOGIN";
+$sugarpassword= "PASSWORD";
+
+$dbname = "DBNAME";
+$dbusername = "DBUSER";
+$dbpassword = "DBPASSWORD";
