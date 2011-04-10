@@ -1,16 +1,19 @@
 <a href="/servers/grouped/">View as grouped</a>
-<div id="servers" class="page list">
+<div id="servers" class="page table">
 <?php
 if ( count($servers) > 0 )
 {
-  echo '<table>
-<tr>
-<th>Name</th>
-<th>IP</th>
-<th>Type</th>
-<th>OS</th>
-<th>Arch</th>
-</tr>';
+  echo '<table class="tablesorter">
+<thead>
+  <tr>
+    <th>Name</th>
+    <th>IP</th>
+    <th>Type</th>
+    <th>OS</th>
+    <th>Arch</th>
+  </tr>
+</thead>
+<tbody>';
   foreach ($servers as $server) 
   {
     echo '<tr>
@@ -21,7 +24,7 @@ if ( count($servers) > 0 )
       <td>'.$server->arch.'</td>
       </tr>';
   }
-  echo '</table>';
+  echo '</tbody></table>';
 }
 else
 {

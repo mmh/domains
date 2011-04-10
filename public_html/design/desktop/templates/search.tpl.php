@@ -11,4 +11,5 @@
     <input type="radio" name="type" value="owner" /> Owner
 </div>
 </form>
+<br/>
 <div id="result"></div>

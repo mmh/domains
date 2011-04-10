@@ -80,6 +80,8 @@ $(document).ready(function() {
     });
   });
 
+  $(".tablesorter").tablesorter({widgets: ['zebra']});
+
 });
 
 function setMessage(msg,type)
