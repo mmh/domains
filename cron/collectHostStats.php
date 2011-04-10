@@ -6,32 +6,25 @@
 
 $collectURL = 'http://domains.bellcom.dk/service/datacollector/';
 
-$systemInfo = array();
+$hostStats = array();
 $facterOutput = trim( shell_exec('facter') );
 $facterLines = explode("\n",$facterOutput);
 foreach ($facterLines as $line)
 {
   list($key,$value) = explode(' => ', $line);
-  $systemInfo[$key] = $value;
+  $hostStats[$key] = $value;
 }
 
-$statsarray['hostname']      = $systemInfo['hostname'];
-$statsarray['ip']            = $systemInfo['ipaddress'];
-$statsarray['memory']        = $systemInfo['memorysize'];
-$statsarray['arch']          = $systemInfo['hardwaremodel'];
-$statsarray['debianversion'] = $systemInfo['lsbdistdescription'];
-$statsarray['virtual']       = $systemInfo['virtual'];
-
-if ($systemInfo['virtual'] == 'xen0') 
+if ($hostStats['virtual'] == 'xen0') 
 {
   $domUs = parseXenDomUs();
-  $statsarray['domUs'] = $domUs;
+  $hostStats['domUs'] = $domUs;
 }
 
 $vhosts = parseVhosts();
 if (!empty($vhosts[0])) 
 {
-  $statsarray['vhosts'] = $vhosts;
+  $hostStats['vhosts'] = $vhosts;
 }
 
 function parseXenDomUs() 
@@ -85,10 +78,10 @@ function parseVhosts()
   return $allvhosts;
 }
 
-#print_r($statsarray);
+#print_r($hostStats);
 
 $ch = curl_init();
-$data = base64_encode( serialize( $statsarray ));
+$data = base64_encode( serialize( $hostStats ));
 curl_setopt($ch, CURLOPT_URL, $collectURL);
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, array( 'data' => $data ));

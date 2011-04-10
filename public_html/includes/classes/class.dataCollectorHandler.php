@@ -17,12 +17,12 @@ class dataCollectorHandler implements mvc\ActionHandler
     }
     $server->updated = mktime();
     $server->name = $data['hostname'];
-    $server->ip = $data['ip'];
+    $server->ip = $data['ipaddress'];
     $hardware = array(
-      'memory' => $data['memory'],
+      'memory' => $data['memorysize'],
       );
-    $server->os = $data['debianversion'];
-    $server->arch = $data['arch'];
+    $server->os = $data['lsbdistrelease'];
+    $server->arch = $data['hardwaremodel'];
     $server->hardware = serialize($hardware);
     $server->type = $data['virtual'];
     $serverID = R::store($server);
