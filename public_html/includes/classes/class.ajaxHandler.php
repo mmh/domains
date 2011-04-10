@@ -118,7 +118,7 @@ class ajaxHandler implements mvc\ActionHandler
           switch ($type) 
           {
             case 'server':
-              $desc = $result->name .' ('. $result->ip .')';
+              $desc = $result->name .' is of type '. $result->type  .' and has ip: '. $result->ip .'';
               break;
             case 'domain':
               $servers = R::related( $result, 'server' );
