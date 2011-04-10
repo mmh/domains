@@ -80,8 +80,7 @@ class ajaxHandler implements mvc\ActionHandler
           $html = '<ul>';
           foreach ($domains as $domain) 
           {
-            #$html .= '<li'. ($domain->is_active ? '' : ' class="inactive"')  .'><a href="http://'.$domain->name.'">'. $domain->name .'</a></li>';
-            $html .= '<li'. ($domain->is_active ? '' : ' class="inactive"')  .'><a href="http://'.$domain->name.'">'. $domain->name .'</a> '.$domain->dns_info.'</li>';
+            $html .= '<li'. ($domain->is_active ? '' : ' class="inactive"')  .'><a href="http://'.$domain->name.'">'. $domain->name .'</a>'. (!empty($domain->dns_info) ? '<img src="/design/desktop/stylesheets/images/red_asterisk.gif" title="'.$domain->dns_info.'" </img>' : '').'</li>';
           }
           $html .= '</ul>';
 

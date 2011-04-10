@@ -3,11 +3,11 @@ TODO
 Er der noget TODO i på github som er bedre end en tekstfil?
 
 * [*DONE*][NEW] Få adskildt passwords og sensitivt data i en fil for sig selv som kan excludes fra git
-* [BUG] Pænere visning af de domæner hvor DNS peger forkert
+* [*DONE*] Pænere visning af de domæner hvor DNS peger forkert
 * [BUG] Sortering af servere?
 * [*DONE*][BUG] Knytning af vhostgroup til account fejler nogle gange
 * [NEW] Oprydnings side: vise ting der er fejl i, f.eks. domU'er uden dom0 tilknytning
 * [NEW] Behold kobling mellem account og domain selv hvis databasen bliver tømt for domæner og servere
 * [NEW] Lav søgning efter server/domæne
-* [NEW] Få rullet collectHostStats.php ud overalt  
-  * Benytte optimeret udgave som er MEGET HURTIGERE  
+* [*DONE*] Få rullet collectHostStats.php ud overalt  
+* [*DONE*] Benytte optimeret udgave som er MINIMALT HURTIGERE  
