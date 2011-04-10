@@ -20,6 +20,8 @@ class dataCollectorHandler implements mvc\ActionHandler
     $server->ip = $data['ipaddress'];
     $hardware = array(
       'memory' => $data['memorysize'],
+      'cpucount' => $data['processorcount'],
+      'cpu' => $data['processor0'],
       );
     $server->os = $data['lsbdistrelease'];
     $server->arch = $data['hardwaremodel'];
