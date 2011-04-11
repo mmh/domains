@@ -77,12 +77,12 @@ class ajaxHandler implements mvc\ActionHandler
 
         if ( !empty($domains) )
         {
-          $html = '<ul>';
+          $html = '<table class="domains list tablesorter">';
           foreach ($domains as $domain) 
           {
-            $html .= '<li'. ($domain->is_active ? '' : ' class="inactive"')  .'><a href="http://'.$domain->name.'">'. $domain->name .'</a>'. (!empty($domain->dns_info) ? '<img src="/design/desktop/stylesheets/images/red_asterisk.gif" title="'.$domain->dns_info.'" </img>' : '').'</li>';
+            $html .= '<tr><td>'. (!empty($domain->dns_info) ? '<img src="/design/desktop/images/error.png" title="'.$domain->dns_info.'" class="icon"/>' : '').'</td><td'. ($domain->is_active ? '' : ' class="inactive"')  .'><a href="http://'.$domain->name.'">'. $domain->name .'</a></td></tr>';
           }
-          $html .= '</ul>';
+          $html .= '</table>';
 
           $msg = array(
             'msg'      => '',

@@ -21,8 +21,7 @@ class servers
   {
     $this->views = array(
       'table'   => array( 'tpl' => 'templates/servers_table.tpl.php'),
-      'grouped' => array( 'tpl' => 'templates/servers.tpl.php' ),
-      'list'    => array( 'tpl' => 'templates/servers_list.tpl.php' ),
+      'list'    => array( 'tpl' => '' ),
       );
   }
 
@@ -58,11 +57,9 @@ class servers
       {
         case 'list':
         default:
-          $data['servers_grouped'] = $this->getGroupedByType();
           break;
       }
 
-      mvc\render($data['designPath'].$this->views[$view]['tpl'], $data);
     }
     else
     {
@@ -71,43 +68,5 @@ class servers
     return true;
   }
 
-  /**
-   * Groups all servers by type (xen0,xenu) 
-   *
-   * @return array 
-   * @author Henrik Farre <hf@bellcom.dk>
-   **/
-  private function getGroupedByType()
-  {
-    $servers = R::find('server');
-    $data = array();
-
-    $groupedServers = array();
-
-    foreach ($servers as $server) 
-    {
-      if ( is_null( $server->parent_id ) && $server->type == 'xen0' )
-      {
-        $groupedServers[ $server->id ]['xen0'] = $server;
-      }
-      if ( !is_null( $server->parent_id ) && $server->type == 'xenu' )
-      {
-        $groupedServers[ $server->parent_id ]['xenu'][] = $server;
-      }
-    }
-
-    return $groupedServers;
-  }
-
-  /**
-   * Returns all servers
-   *
-   * @return array
-   * @author Henrik Farre <hf@bellcom.dk>
-   **/
-  private function getAll()
-  {
-    return R::find('server');
-  }
 
 } // END class servers

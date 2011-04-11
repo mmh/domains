@@ -1,5 +1,8 @@
 $(document).ready(function() {
 
+  $.facebox.settings.closeImage = '/design/desktop/images/closelabel.png';
+  $.facebox.settings.loadingImage = '/design/desktop/images/loading.gif';
+
   $("#accountsToDomains #accountName").autocomplete({
     source: '/service/ajax/getAccount/json/',
     minLength: 2,
@@ -49,20 +52,11 @@ $(document).ready(function() {
     });
   });
 
-  $(".toggleDomains").click(function(e) {
+  $(".loadDomains").click(function(e) {
     e.preventDefault();
 
-    var $container = $(this).next(".container");
-    var $anchor = $(this);
-
-    if ( $(this).next(".container").children().length )
-    {
-      $anchor.html('Load domains');
-      $container.empty();
-      return;
-    }
-
     var url = this.href;
+
     $.ajax({
       url: url,
       dataType: 'json',
@@ -73,12 +67,16 @@ $(document).ready(function() {
       }
       else
       {
-        $anchor.html('Hide domains');
-        $container.html(data.content);
+        $.facebox(data.content);
       }
       }
     });
   });
+
+  /*$('.facebox').facebox({
+    loadingImage : '../images/loading.gif',
+    closeImage : '../images/closelabel.png'
+  });*/
 
   $(".tablesorter").tablesorter({widgets: ['zebra']});
 

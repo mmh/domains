@@ -28,16 +28,16 @@ echo '<strong>'. $xen0['xen0']->name .'</strong> | <img src="/design/desktop/ima
 <table class="tablesorter xenu">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>IP</th>
-      <th>OS</th>
-      <th>OS release</th>
-      <th>OS kernel</th>
-      <th>Arch</th>
-      <th>Cpu</th>
-      <th>Memory</th>
-      <th>Actions</th>
-      <th>Comment</th>
+      <th class="name">Name</th>
+      <th class="ip">IP</th>
+      <th class="os">OS</th>
+      <th class="os_release">OS release</th>
+      <th class="os_kernel">OS kernel</th>
+      <th class="arch">Arch</th>
+      <th class="cpu">Cpu</th>
+      <th class="memory">Memory</th>
+      <th class="actions">Actions</th>
+      <th class="comment">Comment</th>
     </tr>
   </thead>
   <tbody>';
@@ -54,7 +54,7 @@ echo '<strong>'. $xen0['xen0']->name .'</strong> | <img src="/design/desktop/ima
       <td>'.$xenu->arch.'</td>
       <td class="hardware cpu">'.$hardware['cpucount'] .' &times; '. $hardware['cpu'] .'</td>
       <td class="hardware memory">'. $hardware['memory'] .'</td>
-      <td><a href="">Load domains</a></td>
+      <td><a class="loadDomains" href="/service/ajax/getDomains/json/?serverID='.$xenu->id.'">Load domains</a></td>
       <td>'.$xenu->comment.'</td>
       </tr>';
     }

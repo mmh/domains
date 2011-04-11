@@ -9,7 +9,7 @@ class contentHandler implements mvc\ActionHandler
     $designPath = 'design/'.mvc\retrieve('theme').'/';
 
     $module = isset($params['module']) ? $params['module'] : 'servers';
-    $view   = isset($params['view']) ? $params['view'] : 'list';
+    $view   = isset($params['view']) ? $params['view'] : 'index';
                  
     $data['module']     = $module;
     $data['view']       = $view;
@@ -48,9 +48,8 @@ class contentHandler implements mvc\ActionHandler
         break;
 
       case 'servers':
-        require 'includes/modules/class.servers.php' ;
-        $servers = new servers();
-        $servers->executeView($view,$data);
+        $data['servers_grouped'] = getGroupedByType();
+        mvc\render($designPath.'templates/servers_list.tpl.php', $data);
         break;
 
       case 'search':
