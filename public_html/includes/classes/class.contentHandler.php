@@ -9,7 +9,7 @@ class contentHandler implements mvc\ActionHandler
     $designPath = 'design/'.mvc\retrieve('theme').'/';
 
     $module = isset($params['module']) ? $params['module'] : 'servers';
-    $view   = isset($params['view']) ? $params['view'] : 'grouped';
+    $view   = isset($params['view']) ? $params['view'] : 'list';
                  
     $data['module']     = $module;
     $data['view']       = $view;

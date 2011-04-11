@@ -98,12 +98,44 @@ th {
   width: 100%;
 }
 
+#servers.list .os {
+  padding-left: 20px;
+}
+
+#servers.list .xenu .os.debian {
+  background-image: url('../images/debian-logo.png'); 
+  background-repeat: no-repeat;
+}
+
+#servers.list .xenu .os.archlinux {
+  background-image: url('../images/archlinux-logo.png');
+  background-repeat: no-repeat;
+}
+
+#servers.list .xenu .hardware {
+  padding-left: 20px;
+}
+
+#servers.list .xenu .hardware.cpu {
+  background-image: url('../images/processor.png');
+  background-repeat: no-repeat;
+}
+
+#servers.list .xenu .hardware.memory {
+  background-image: url('../images/ddr_memory.png');
+  background-repeat: no-repeat;
+}
+
 .domains li.inactive a {
   color: #cbcbcb;
   text-decoration: line-through;
 }
 
 #result {
+}
+
+.icon {
+  vertical-align: middle;
 }
 
 #messages {
@@ -168,4 +200,15 @@ table.tablesorter thead tr .headerSortDown {
 }
 table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
   background-color: #8dbdd8;
+}
+
+/* tooltips */
+.tooltip {
+  display:none;
+  height:70px;
+  width:160px;
+  padding:1em;
+  border: 1px solid #000;
+  background-color:#fff;
+  color: #000;
 }

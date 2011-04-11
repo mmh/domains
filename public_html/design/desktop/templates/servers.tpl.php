@@ -1,4 +1,5 @@
-<a href="/servers/table/">View as table</a>
+<a href="/servers/table/">View as table</a> | <a href="/servers/list/">View as alt. list</a>
+
 <div id="servers" class="page list">
 <?php
 if ( count($servers_grouped) > 0 )

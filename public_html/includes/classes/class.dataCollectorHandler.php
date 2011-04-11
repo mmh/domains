@@ -23,10 +23,13 @@ class dataCollectorHandler implements mvc\ActionHandler
       'cpucount' => $data['processorcount'],
       'cpu' => $data['processor0'],
       );
-    $server->os = $data['lsbdistrelease'];
+    $server->kernel_release = $data['kernelrelease'];
+    $server->os = $data['lsbdistid'];
+    $server->os_release = $data['lsbdistrelease'];
     $server->arch = $data['hardwaremodel'];
     $server->hardware = serialize($hardware);
     $server->type = $data['virtual'];
+    $server->comment = '';
     $serverID = R::store($server);
 
     if ( $server->type === 'xen0' && isset($data['domUs']) && !empty($data['domUs']) )

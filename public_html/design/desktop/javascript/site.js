@@ -82,6 +82,7 @@ $(document).ready(function() {
 
   $(".tablesorter").tablesorter({widgets: ['zebra']});
 
+  $(".tooltip_trigger").tooltip().dynamic({ bottom: { direction: 'down', bounce: true } });
 });
 
 function setMessage(msg,type)

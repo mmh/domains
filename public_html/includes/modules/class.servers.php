@@ -20,8 +20,9 @@ class servers
   public function __construct()
   {
     $this->views = array(
-      'table' => array( 'tpl' => 'templates/servers_table.tpl.php'),
+      'table'   => array( 'tpl' => 'templates/servers_table.tpl.php'),
       'grouped' => array( 'tpl' => 'templates/servers.tpl.php' ),
+      'list'    => array( 'tpl' => 'templates/servers_list.tpl.php' ),
       );
   }
 
@@ -55,10 +56,7 @@ class servers
     {
       switch ($view) 
       {
-        case 'table':
-          $data['servers'] = $this->getAll();
-          break;
-        case 'grouped':
+        case 'list':
         default:
           $data['servers_grouped'] = $this->getGroupedByType();
           break;
