@@ -2,11 +2,13 @@ TODO
 
 Er der noget TODO i på github som er bedre end en tekstfil?
 
+* [NEW] domains project that need a new name..  "pointy" siger ulrik
+* [NEW] Data collector servicen skal ikke returnere noget med mindre der er fejl
 * [BUG] Sortering af servere?
 * [NEW] Oprydnings side: vise ting der er fejl i, f.eks. domU'er uden dom0 tilknytning
 * [NEW] Behold kobling mellem account og domain selv hvis databasen bliver tømt for domæner og servere
 * [NEW] Lav søgning efter server/domæne
-* [*NEW*] Vis physical servere?
+* [NEW] Vis physical servere?
 
 * [*DONE*][NEW] Få adskildt passwords og sensitivt data i en fil for sig selv som kan excludes fra git
 * [*DONE*] Pænere visning af de domæner hvor DNS peger forkert
