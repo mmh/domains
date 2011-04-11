@@ -4,13 +4,16 @@
 * TODO - punycode domains, better return messages, do a lookup on * domains and only warn thats its not right, if domains points to IP in our range then return the servername too
 */
 
+require dirname(__FILE__).'/../public_html/includes/mimvic/uvic.php';
+use MiMViC as mvc;
+
+$config = require dirname(__FILE__).'/../public_html/config.php';
+mvc\store('config',$config);
 
 require dirname(__FILE__).'/../public_html/includes/redbean/rb.php';
-include dirname(__FILE__).'/../public_html/config.php';
 
-$dsn = 'mysql:host=localhost;dbname='.$dbname;
-R::setup($dsn,$dbusername,$dbpassword);
-
+$dsn = 'mysql:host='.mvc\retrieve('config')->dbHost.';dbname='.mvc\retrieve('config')->dbName;
+R::setup($dsn,mvc\retrieve('config')->dbUsername,mvc\retrieve('config')->dbPassword);
 
 $servers = R::find('server');
 
