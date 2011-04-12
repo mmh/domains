@@ -108,7 +108,6 @@ class dataCollectorHandler implements mvc\ActionHandler
         }
       }
     }
-    echo 'ok';
   }
 }
 
