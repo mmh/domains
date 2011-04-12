@@ -1,5 +1,6 @@
 <div id="servers" class="page list">
 <?php
+use MiMViC as mvc;  
 if ( count($servers_grouped) > 0 )
 {
   foreach ($servers_grouped as $xen0) 
@@ -34,7 +35,7 @@ echo '<strong>'. $xen0['xen0']->name .'</strong> | <img src="/design/desktop/ima
       <th class="os_release">OS release</th>
       <th class="os_kernel">OS kernel</th>
       <th class="arch">Arch</th>
-      <th class="cpu">Cpu</th>
+      <th class="cpu_count">CPU Count</th>
       <th class="memory">Memory</th>
       <th class="actions">Actions</th>
       <th class="comment">Comment</th>
@@ -44,19 +45,8 @@ echo '<strong>'. $xen0['xen0']->name .'</strong> | <img src="/design/desktop/ima
 
     foreach ($xen0['xenu'] as $xenu) 
     {
-      $hardware = unserialize($xenu->hardware);
-      echo '<tr>
-      <td>'.$xenu->name.'</td>
-      <td>'.$xenu->ip.'</td>
-      <td class="os '.strtolower( $xenu->os ).'">'.$xenu->os.'</td>
-      <td>'.$xenu->os_release.'</td>
-      <td>'.$xenu->kernel_release.'</td>
-      <td>'.$xenu->arch.'</td>
-      <td class="hardware cpu">'.$hardware['cpucount'] .' &times; '. $hardware['cpu'] .'</td>
-      <td class="hardware memory">'. $hardware['memory'] .'</td>
-      <td><a class="loadDomains" href="/service/ajax/getDomains/json/?serverID='.$xenu->id.'">Load domains</a></td>
-      <td>'.$xenu->comment.'</td>
-      </tr>';
+      $data['server'] = $xenu;
+      mvc\render($designPath.'templates/server_xenu.tpl.php', $data);
     }
 
 echo '</tbody>

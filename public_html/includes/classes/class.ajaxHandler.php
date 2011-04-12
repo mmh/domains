@@ -77,12 +77,16 @@ class ajaxHandler implements mvc\ActionHandler
 
         if ( !empty($domains) )
         {
-          $html = '<table class="domains list tablesorter">';
+          $html = '<div class="domains list">';
           foreach ($domains as $domain) 
           {
-            $html .= '<tr><td>'. (!empty($domain->dns_info) ? '<img src="/design/desktop/images/error.png" title="'.$domain->dns_info.'" class="icon"/>' : '').'</td><td'. ($domain->is_active ? '' : ' class="inactive"')  .'><a href="http://'.$domain->name.'">'. $domain->name .'</a></td></tr>';
+            $html .= '<div class="domain">
+  <div class="status">'. (!empty($domain->dns_info) ? '<img src="/design/desktop/images/error.png" title="'.$domain->dns_info.'" class="icon"/>' : '').'</div>
+  <div class="name'. ($domain->is_active ? '' : ' inactive')  .'"><a href="http://'.$domain->name.'">'. $domain->name .'</a></div>
+<br class="cls"/>
+</div>';
           }
-          $html .= '</table>';
+          $html .= '</div>';
 
           $msg = array(
             'msg'      => '',
@@ -109,7 +113,13 @@ class ajaxHandler implements mvc\ActionHandler
           $query = $params['segments'][0][1];
         }
 
-        $results = R::find($type, 'name LIKE ?',array($query.'%'));
+        $query = $query .'%';
+        if ( isset($params['segments'][0][2]) && $params['segments'][0][2] == 'both')
+        {
+          $query = '%'.$query;
+        }
+
+        $results = R::find($type, 'name LIKE ?',array($query));
 
         $json = array();
 
@@ -118,7 +128,7 @@ class ajaxHandler implements mvc\ActionHandler
           switch ($type) 
           {
             case 'server':
-              $desc = $result->name .' is of type '. $result->type  .' and has ip: '. $result->ip .'';
+              $desc = '<td></td><td>'.$result->name .'</td><td>type: '. $result->type  .' ip: '. $result->ip .'</td>';
               break;
             case 'domain':
               $servers = R::related( $result, 'server' );
@@ -130,15 +140,17 @@ class ajaxHandler implements mvc\ActionHandler
               }
 
               // there should only be one owner
+              $owner = '';
               if ( !empty($owners) )
               {
                 $owner = ' owned by '. array_shift($owners)->name .' ';
               }
 
-              $desc = 'Domain <a href="http://'.$result->name.'">'. $result->name .'</a> '. $owner .'exist on server'. ( (count($serverDesc)>0) ? 's' : '') .': '. implode(',',$serverDesc);
+              $desc = '<td>'. 
+                (!empty($result->dns_info) ? '<img src="/design/desktop/images/error.png" title="'.$result->dns_info.'" class="icon"/> ' : '') .'</td><td><a'.($result->is_active ? '' : ' class="inactive"').' href="http://'.$result->name.'">'. $result->name .'</a></td><td>'. $owner .'exist on server'. ( (count($serverDesc)>0) ? 's' : '') .': '. implode(',',$serverDesc).'</td>';
               break;
           }
-          $json[] = array( 'id' => $result->id, 'label' => $result->name, 'value' => 'snaps', 'desc' => $desc );
+          $json[] = array( 'id' => $result->id, 'label' => $result->name, 'value' => 'snaps', 'desc' => '<tr class="line '.$type.'">'.$desc.'</tr>' );
         }
 
         die (json_encode($json));

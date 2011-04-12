@@ -119,7 +119,7 @@ th {
     width: 100%;
   }
 
-  #servers.list .os {
+  #servers.list tbody .os {
     padding-left: 20px;
   }
 
@@ -147,6 +147,11 @@ th {
     background-repeat: no-repeat;
   }
 
+  #servers.list .xenu .hardware.error {
+    background-image: none;
+    padding-left: 0;
+  }
+
   #servers .xenu th.name {
     width: 8em;
   }
@@ -154,31 +159,38 @@ th {
     width: 7.5em;
   }
   #servers .xenu th.os {
+    width: 5em;
   }
   #servers .xenu th.os_release {
+    width: 5em;
   }
   #servers .xenu th.os_kernel {
+    width: 7em;
   }
   #servers .xenu th.arch {
     width: 4em;
   }
-  #servers .xenu th.cpu {
+  #servers .xenu th.cpu_count {
+    width: 5em;
   }
   #servers .xenu th.memory {
+    width: 6em;
   }
   #servers .xenu th.actions {
+    width: 5em;
   }
   #servers .xenu th.comment {
+    width: 8em;
   }
 
-  .domains td.inactive a {
-    color: #cbcbcb;
-    text-decoration: line-through;
+  #search #result th.status {
+    width: 4em;
   }
 
-  #result {
+  #search #result th.name {
+    width: 12em;
   }
-
+  
   .icon {
     vertical-align: middle;
   }
@@ -337,4 +349,27 @@ th {
   .facebox_overlayBG {
     background-color: #000;
     z-index: 99;
+  }
+
+  #facebox .domains.list {
+    -moz-column-count: 4;
+    -moz-column-gap: 2em;
+    -moz-column-rule: 1px solid black;
+    -webkit-column-count: 4;
+    -webkit-column-gap: 2em;
+    -webkit-column-rule: 1px solid black;
+  }
+
+  #facebox .domains.list .status {
+    float: left;
+    width: 20px;
+  }
+
+  #facebox .domains.list .name {
+    width: 260px;
+  }
+
+  .domains.list .inactive a {
+    color: #cbcbcb;
+    text-decoration: line-through;
   }
