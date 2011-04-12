@@ -1,7 +1,7 @@
 <?php
 /*
 * Looks up DNS A records for all domains, and updates dns_info if they aren't pointing at the server the are associated with
-* TODO - punycode domains, better return messages, do a lookup on * domains and only warn thats its not right, if domains points to IP in our range then return the servername too
+* TODO - punycode domains, better return messages, do a lookup on * domains and only warn thats its not right, if domains points to IP in our range then return the servername too. Dont check domains that arent active
 */
 
 $config = require dirname(__FILE__).'/../public_html/config.php';

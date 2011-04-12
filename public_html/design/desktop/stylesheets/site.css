@@ -171,7 +171,7 @@ th {
   #servers .xenu th.comment {
   }
 
-  .domains li.inactive a {
+  .domains td.inactive a {
     color: #cbcbcb;
     text-decoration: line-through;
   }
