@@ -1,7 +1,7 @@
 <?php
 /*
 Suggests matches between domains and accounts
-TODO: fix f.eks. co.uk domæner. Vi antager at alt efter sidste . er tld. Returner array af matches. Gem ID på domain og account. Automatisk kobling?
+TODO: fix f.eks. co.uk domæner. Vi antager at alt efter sidste . er tld. 
 */
 
 $config = require 'config.php';
@@ -24,7 +24,7 @@ try
   foreach ($results->entry_list as $result)
   {
     #$accounts[] = (object) array( 'id' => $result->id, 'label' => $result->name_value_list[0]->value, 'value' => $result->name_value_list[0]->value );
-    $accounts[] = $result->name_value_list[0]->value;
+    $accounts[] = array('id' => $result->id, 'value' => $result->name_value_list[0]->value);
   }
 }
 catch(Exception $e)
@@ -33,6 +33,30 @@ catch(Exception $e)
 }
 
 find_suggestions($domains,$accounts);
+
+function domainToAccount ($domainname, $account, $account_id) {
+  $owner = R::findOne('owner', 'account_id=?',array( $account_id ));
+  if ( $owner === false )
+  {
+    $owner = R::dispense("owner");
+    $owner->name = $account;
+    $owner->account_id = $account_id;
+    $id = R::store($owner);
+  }
+  $domain = R::findOne( 'domain', 'name=?',array($domainname));
+  #$domain = R::load( 'domain', $id );
+  R::associate( $owner, $domain );
+
+  $otherDomainsDefinedInVhost = R::find("domain","vhost_group_key = ?",array($domain->vhost_group_key));
+  foreach ($otherDomainsDefinedInVhost as $otherDomain)
+  {
+    if ( $otherDomain->type === 'name' )
+    {
+      continue;
+    }
+    R::associate( $owner, $otherDomain );
+  }
+}
 
 function find_suggestions($domains,$accounts) 
 {
@@ -62,14 +86,15 @@ function find_suggestions($domains,$accounts)
     }
     foreach ($accounts as $account) 
     {
-      $account_words = explode(' ',$account);
+      $account_words = explode(' ',$account['value']);
       foreach ($account_words as $account_word)
       {
         if (strlen($account_word) > 3) 
         {
           if (strcasecmp($shortdomain,$account_word) == 0)
           {
-            echo "FOUND POSSIBLE MATCH. Domain: ".$domain." Account: ".$account."\n";
+            echo "Adding match... Domain: ".$domain." Account: ".$account['value']."\n";
+            domainToAccount($domain, $account['value'], $account['id']);
           }
         }
       }

@@ -27,10 +27,24 @@ if (!empty($vhosts[0]))
   $hostStats['vhosts'] = $vhosts;
 }
 
+$hostStats['disk'] = diskInfo();
+
+function diskInfo()
+{
+  $df = trim(shell_exec("df -H | egrep -v '^Filesystem|tmpfs|cdrom|udev' | awk '{ print \"device=\" $1 \"&mountpoint=\" $6 \"&disktotal=\" $2 \"&diskfree=\" $4 }'"));
+  $dfLines = explode("\n", $df);
+  foreach ($dfLines as $line)
+  {
+    parse_str($line,$output);
+    $diskinfo[] = $output;
+  }
+  return $diskinfo;
+}
+
 function parseXenDomUs() 
 {
   $xmlist = trim(shell_exec('/usr/sbin/xm list | tail -n +3 | cut -d\  -f 1'));
-  return explode("\n",$xmlist);
+  return explode("\n", $xmlist);
 }
 
 function parseVhosts() 
@@ -59,7 +73,7 @@ function parseVhosts()
       {
         if (!empty($vhostfile)) 
         { 
-          array_push($allvhosts,$vhostfile);
+          $allvhosts[] = $vhostfile;
           $vhostfile = array();
         }
         $vhostfile = array('servername' => trim(strstr($line," ")));
@@ -69,12 +83,12 @@ function parseVhosts()
         $exploded = explode(" ",trim($line));
         for ($i = 1;$i < sizeof($exploded);$i++)
         {
-          array_push($vhostfile,$exploded[$i]);
+          $vhostfile[] = $exploded[$i];
         }
       }
     }
   }
-  array_push($allvhosts,$vhostfile);
+  $allvhosts[] = $vhostfile;
   return $allvhosts;
 }
 

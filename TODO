@@ -2,6 +2,7 @@ TODO
 
 Er der noget TODO i på github som er bedre end en tekstfil?
 
+* [BUG] domain table should contain one row per domain. is_active and dns_info can be different depending on what server the domain is associated with
 * [NEW] domains project that need a new name..  "pointy" siger ulrik
 * [BUG] Sortering af servere?
 * [NEW] Oprydnings side: vise ting der er fejl i, f.eks. domU'er uden dom0 tilknytning

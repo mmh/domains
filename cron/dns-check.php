@@ -2,6 +2,7 @@
 /*
 * Looks up DNS A records for all domains, and updates dns_info if they aren't pointing at the server the are associated with
 * TODO - punycode domains, better return messages, do a lookup on * domains and only warn thats its not right, if domains points to IP in our range then return the servername too. Dont check domains that arent active
+* That every domain only is stored in the domain table once, even if it exists on several servers, breaks the script if domains points to several servers - like pompdelux.dk
 */
 
 $config = require dirname(__FILE__).'/../public_html/config.php';
@@ -23,6 +24,11 @@ foreach ($servers as $server)
       {
         #echo $server->name."/".$domain->name." : ".$status."\n";
         $domain->dns_info = $status;
+        R::store($domain);
+      }
+      else 
+      {
+        $domain->dns_info = NULL;
         R::store($domain);
       }
     }
