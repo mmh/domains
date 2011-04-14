@@ -29,6 +29,18 @@ if (!empty($vhosts[0]))
 
 $hostStats['disk'] = diskInfo();
 
+if ($hostStats['operatingsystem'] == "Debian") 
+{
+  $hostStats['aptupdates'] = aptUpdates();
+}
+
+function aptUpdates()
+{
+  shell_exec("apt-get -qq update");
+  $aptget = trim(shell_exec("/usr/bin/apt-get -q -y --allow-unauthenticated -s upgrade  |  /bin/grep ^Inst  | /usr/bin/cut -d\  -f2 | /usr/bin/sort"));
+  return explode("\n",$aptget);
+}
+
 function diskInfo()
 {
   $df = trim(shell_exec("df -H | egrep -v '^Filesystem|tmpfs|cdrom|udev' | awk '{ print \"device=\" $1 \"&mountpoint=\" $6 \"&disktotal=\" $2 \"&diskfree=\" $4 }'"));

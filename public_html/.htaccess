@@ -11,6 +11,8 @@ Allow from 192.168.1.0/24
 Allow from 192.168.2.0/24
 # office
 Allow from 90.185.183.84
+#mmh
+Allow from 85.80.148.89
 
 RewriteEngine on  
 RewriteCond $1 !^(index\.php|design) 
