@@ -10,6 +10,18 @@ Er der noget TODO i på github som er bedre end en tekstfil?
 * [NEW] Søgning der kan vise flere resultater
 * [NEW] Vis physical servere
 
+* [NEW] tidsmarkering på opdatering af en server? Så vi kan se hvis en server ikke længere melder ind, eller er slukket/slettet
+* [NEW] domains tabellen bør indeholde en entry pr. domain pga forskellige options pr domæne
+* [NEW] ting som er manuelt sat bør gemmes i seperate tabeller og bruge "navne" som keys. f.eks. comments på server, binding mellem domæner og accounts
+* [NEW] hvis ovenstående virker, så kan man køre en clear på alle tabeller undtagen disse, og systemet er clean næste morgen
+* [NEW] mulighed for at skrive noget i comments feltet for en server. gerne bare ved tryk på feltet
+* [NEW] visning xen servere mere som en normal server, så man også kan se alt info for dem
+* [NEW] visning af uptime på serveroversigten
+* [NEW] visning af diskinfo. overvej en god måde at vise de 4 ting vi har pr device. måske som et disk icon pr device, med info ved mouseover
+* [NEW] visning af apt upgrade info på serveroversigten. vis bare antallet af pakker som skal opgraderes, og listen ved mouseover. evt med forskellige farver alt efter hvor mange det er
+* [NEW] vis kun "list domains" action på serveroversigten hvis der findes domæner?
+
+
 * [*DONE*] Lav søgning efter server/domæne
 * [*DONE*] Data collector servicen skal ikke returnere noget med mindre der er fejl
 * [*DONE*][NEW] Få adskildt passwords og sensitivt data i en fil for sig selv som kan excludes fra git
