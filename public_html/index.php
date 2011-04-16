@@ -11,17 +11,18 @@ require 'includes/classes/class.ajaxHandler.php';
 require 'includes/classes/class.contentHandler.php';
 require 'includes/classes/class.dataCollectorHandler.php';
 require 'includes/functions.php';
-require 'includes/mobileDetect/MobileDetect.class.php';
+//require 'includes/mobileDetect/MobileDetect.class.php';
 
 $dsn = 'mysql:host='.mvc\retrieve('config')->dbHost.';dbname='.mvc\retrieve('config')->dbName;
 R::setup($dsn,mvc\retrieve('config')->dbUsername,mvc\retrieve('config')->dbPassword);
 // TODO: RedBean freeze schema
 
-$detect = MobileDetect::getInstance();
+//$detect = MobileDetect::getInstance();
 
 $debug = false;
 mvc\store('debug',$debug);
-$theme = $detect->isMobile() ? 'mobile' : 'desktop';
+//$theme = $detect->isMobile() ? 'mobile' : 'desktop';
+$theme = 'desktop';
 mvc\store('theme',$theme);
 
 mvc\get('/service/ajax/:action/:format/*', mvc\Action('ajaxHandler') );  
