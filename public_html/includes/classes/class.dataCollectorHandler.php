@@ -8,6 +8,11 @@ class dataCollectorHandler implements mvc\ActionHandler
   {
     $data = unserialize( base64_decode( $_POST['data'] ) );
 
+    if ( $data['hostname'] == null || empty( $data['hostname'] ) )
+    {
+      die('Missing hostname');
+    }
+
     $server = R::findOne("server", "name=? ", array($data['hostname']));
 
     if ( empty($server) )
@@ -16,20 +21,22 @@ class dataCollectorHandler implements mvc\ActionHandler
       $server->created = mktime();
     }
     $server->updated = mktime();
-    $server->name = $data['hostname'];
-    $server->ip = $data['ipaddress'];
+    $server->name    = $data['hostname'];
+    $server->ip      = $data['ipaddress'];
+
     $hardware = array(
-      'memory' => $data['memorysize'],
+      'memory'   => $data['memorysize'],
       'cpucount' => $data['processorcount'],
-      'cpu' => $data['processor0'],
+      'cpu'      => $data['processor0'],
       );
+
     $server->kernel_release = $data['kernelrelease'];
-    $server->os = $data['lsbdistid'];
-    $server->os_release = $data['lsbdistrelease'];
-    $server->arch = $data['hardwaremodel'];
-    $server->hardware = serialize($hardware);
-    $server->type = $data['virtual'];
-    $server->comment = '';
+    $server->os             = $data['lsbdistid'];
+    $server->os_release     = $data['lsbdistrelease'];
+    $server->arch           = $data['hardwaremodel'];
+    $server->hardware       = serialize($hardware);
+    $server->type           = $data['virtual'];
+    $server->comment        = '';
     $serverID = R::store($server);
 
     if ( $server->type === 'xen0' && isset($data['domUs']) && !empty($data['domUs']) )
@@ -110,6 +117,3 @@ class dataCollectorHandler implements mvc\ActionHandler
     }
   }
 }
-
-
-?>
