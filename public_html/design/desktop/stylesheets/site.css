@@ -73,7 +73,7 @@ th {
     list-style: square;
   }
 
-  #servers .xen0 {
+  /*#servers .xen0 {
     padding: 1em;
     margin-bottom: 1em;
     border: 1px solid #cbcbcb;
@@ -95,7 +95,7 @@ th {
 
   #servers .xen0 h1 {
     margin-top: 0;
-  }
+  }*/
 
   #servers .xenu .info {
     width: 200px;
@@ -123,31 +123,33 @@ th {
     padding-left: 20px;
   }
 
-  #servers.list .xenu .os.debian {
+  #servers.list .os {
+    background-repeat: no-repeat;
+  }
+
+  #servers.list .os.debian {
     background-image: url('../images/debian-logo.png'); 
-    background-repeat: no-repeat;
   }
 
-  #servers.list .xenu .os.archlinux {
+  #servers.list .os.archlinux {
     background-image: url('../images/archlinux-logo.png');
-    background-repeat: no-repeat;
   }
 
-  #servers.list .xenu .hardware {
+  #servers.list .hardware {
     padding-left: 20px;
   }
 
-  #servers.list .xenu .hardware.cpu {
+  #servers.list .hardware.cpu {
     background-image: url('../images/processor.png');
     background-repeat: no-repeat;
   }
 
-  #servers.list .xenu .hardware.memory {
+  #servers.list .hardware.memory {
     background-image: url('../images/ddr_memory.png');
     background-repeat: no-repeat;
   }
 
-  #servers.list .xenu .hardware.error {
+  #servers.list .hardware.error {
     background-image: none;
     padding-left: 0;
   }
