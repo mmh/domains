@@ -72,7 +72,8 @@ class ajaxHandler implements mvc\ActionHandler
         );
         break;
       case 'getDomains':
-        $server = R::load("server",$_GET['serverID']);
+        $serverID = (int) $_GET['serverID'];
+        $server = R::load("server",$serverID);
         $domains = R::related($server,'domain');
 
         if ( !empty($domains) )
@@ -154,6 +155,193 @@ class ajaxHandler implements mvc\ActionHandler
         }
 
         die (json_encode($json));
+        break;
+      case 'missingDomRelation':
+
+        $servers = R::find( "server", "type = ?", array('xenu') );
+        $content = array();
+
+        foreach ( $servers as $server )
+        {
+          $dom0 = false;
+          $dom0 = R::getParent( $server );
+          if ( !($dom0 instanceof RedBean_OODBBean ) || empty( $dom0->name ) )
+          {
+            $content[] = $server->name;
+          }
+        }
+
+        if ( empty($content) )
+        {
+          $msg = array(
+            'msg'      => 'ok',
+            'msg_type' => 'No servers found',
+            'error'    => true,
+            'content'  => '',
+          );
+        }
+        else
+        {
+          $msg = array(
+            'msg'      => 'ok',
+            'msg_type' => 'ok',
+            'error'    => false,
+            'content'  => implode('<br/>',$content),
+          );
+        }
+        break;
+      case 'missingFieldsOnServer':
+        
+        $servers = R::find( "server");
+        $content = array();
+        $allowedMissing = array( 'comment' );
+        
+        foreach ( $servers as $server ) 
+        {
+          $missingFields = array();
+          foreach ( $server->getIterator() as $key => $value )
+          {
+            if ( in_array($key,$allowedMissing))
+            {
+              continue;
+            }
+
+            if ( empty( $value ) || is_null($value) )
+            {
+              $missingFields[] = $key;
+            }
+          }
+          if ( !empty($missingFields) )
+          {
+            $content[] = $server->id.' is missing: '. implode(', ',$missingFields);
+          }
+        }
+
+        $msg = array(
+          'msg'      => 'ok',
+          'msg_type' => 'ok',
+          'error'    => false,
+          'content'  => implode('<br/>',$content),
+        );
+        break;
+
+      case 'inactiveDomains':
+
+        $domains = R::find( "domain", "is_active=?",array(false));
+        $content = array();
+        
+        foreach ( $domains as $domain )
+        {
+          $server    = R::load( "server", $domain->server_id );
+          $content[] = $domain->name .' on '. $server->name .' last updated '. date( 'd-m-Y H:i:s', $domain->updated );
+        }
+
+        if ( empty($content) )
+        {
+          $msg = array(
+            'msg'      => 'ok',
+            'msg_type' => 'No inactive domains found',
+            'error'    => true,
+            'content'  => '',
+          );
+        }
+        else
+        {
+          $msg = array(
+            'msg'      => 'ok',
+            'msg_type' => 'ok',
+            'error'    => false,
+            'content'  => implode('<br/>',$content),
+          );
+        }
+        break;
+      case 'notUpdatedRecently':
+
+        $content = array();
+        $type = $params['segments'][0][0];
+        $ts   = mktime();
+
+        switch ($type) 
+        {
+          case 'domains':
+            $results = R::find( "domain", "updated < ?", array( $ts ) );
+            break;
+          case 'servers':
+            $results = R::find( "server", "updated < ?", array( $ts ) );
+            break;
+        }
+
+        foreach ( $results as $result )
+        {
+          $content[] = $result->name;
+        }
+
+        if ( empty($content) )
+        {
+          $msg = array(
+            'msg'      => 'ok',
+            'msg_type' => 'No '. $type .' not updated the last 3 days',
+            'error'    => true,
+            'content'  => '',
+          );
+        }
+        else
+        {
+          $msg = array(
+            'msg'      => 'ok',
+            'msg_type' => 'ok',
+            'error'    => false,
+            'content'  => implode('<br/>',$content),
+          );
+        }
+        break;
+
+      case 'editServerComment':
+
+        $serverID = (int) $_GET['serverID'];
+        $server = R::load( "server", $serverID );
+
+        if ( $server instanceof RedBean_OODBBean )
+        {
+          $content = '<form action="/service/ajax/saveServerComment/json/?serverID='.$serverID.'" method="post" id="serverCommentForm">
+            <p>
+              <textarea name="comment" rows="10" cols="50">'. $server->comment .'</textarea><br/>
+              <input type="submit" name="serverCommentSaveAction" value="Save" />
+            </p>
+            </form';
+
+            $msg = array(
+              'msg'      => 'ok',
+              'msg_type' => 'ok',
+              'error'    => false,
+              'content'  => $content,
+            );
+        }
+        else
+        {
+          $msg = array(
+            'msg'      => 'Unknown server',
+            'msg_type' => 'error',
+            'error'    => true,
+            'content'  => '',
+          );
+        }
+        break;
+      case 'saveServerComment':
+
+        $comment = $_GET['comment'];
+        $serverID = (int) $_GET['serverID'];
+        $server = R::load( "server", $serverID );
+        $server->comment = $comment;
+        R::store($server);
+
+        $msg = array(
+          'msg'      => 'Comment stored',
+          'msg_type' => 'ok',
+          'error'    => false,
+          'content'  => '',
+        );
+
         break;
       default:
           $msg = array(

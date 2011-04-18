@@ -13,7 +13,7 @@ class dataCollectorHandler implements mvc\ActionHandler
       die('Missing hostname');
     }
 
-    $server = R::findOne("server", "name=? ", array($data['hostname']));
+    $server = R::findOne("server", "name = ? ", array($data['hostname']));
 
     if ( empty($server) )
     {
@@ -36,7 +36,7 @@ class dataCollectorHandler implements mvc\ActionHandler
     $server->arch           = $data['hardwaremodel'];
     $server->hardware       = serialize($hardware);
     $server->type           = $data['virtual'];
-    $server->comment        = '';
+    $server->comment        = $server->comment; // keep existing comment - should be dropped when schema is frozen
     $serverID = R::store($server);
 
     if ( $server->type === 'xen0' && isset($data['domUs']) && !empty($data['domUs']) )
@@ -66,7 +66,6 @@ class dataCollectorHandler implements mvc\ActionHandler
     }
 
     // Handle domains
-
     if ( isset($data['vhosts']) )
     {
       foreach ($data['vhosts'] as $domains) 
@@ -83,7 +82,7 @@ class dataCollectorHandler implements mvc\ActionHandler
           }
 
           $domain = array();
-          $domain = R::findOne("domain", "name=? ", array( $domainName  ));
+          $domain = R::findOne("domain", "name = ? and server_id = ? ", array( $domainName, $serverID ));
 
           if ( empty($domain) )
           {
@@ -94,6 +93,7 @@ class dataCollectorHandler implements mvc\ActionHandler
           $domain->name            = $domainName;
           $domain->vhost_group_key = $vhostGroupKey;
           $domain->is_active       = true;
+          $domain->server_id       = $serverID; // a domain can exist on multiple servers
           $domain->type            = 'alias';
 
           if ( $key === 'servername' )

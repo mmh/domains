@@ -73,7 +73,7 @@ $(document).ready(function() {
     });
   });
 
-  $(".loadDomains").click(function(e) {
+  $(".ajaxRequest").click(function(e) {
     e.preventDefault();
 
     var url = this.href;
@@ -82,14 +82,36 @@ $(document).ready(function() {
       url: url,
       dataType: 'json',
       success: function(data){
-      if (data.error)
-      {
-        setMessage(data.msg,data.msg_type);
+        if (data.error)
+        {
+          setMessage(data.msg,data.msg_type);
+        }
+        else
+        {
+          $.facebox(data.content);
+        }
       }
-      else
-      {
-        $.facebox(data.content);
-      }
+    });
+  });
+
+  $("body").delegate("#facebox form","submit", function(e){
+    e.preventDefault();
+    var formData = $(this).serialize();
+    var ajaxUrl  = $(this).attr('action');
+    $.ajax({
+      url: ajaxUrl,
+      data: formData,
+      dataType: 'json',
+      success: function(data){
+        if (data.error)
+        {
+          setMessage(data.msg,data.msg_type);
+        }
+        else
+        {
+          setMessage(data.msg,data.msg_type);
+          $.facebox.close();
+        }
       }
     });
   });
