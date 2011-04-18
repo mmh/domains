@@ -56,6 +56,10 @@ class contentHandler implements mvc\ActionHandler
         mvc\render($designPath.'templates/search.tpl.php', $data);
         break;
 
+      case 'cleanup':
+        mvc\render($designPath.'templates/cleanup.tpl.php', $data);
+        break;
+
       default:
         $data['error'] = array(
           'code' => '404',

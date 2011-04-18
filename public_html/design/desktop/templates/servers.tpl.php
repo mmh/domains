@@ -1,3 +1,6 @@
+<?php
+die('not used');
+?>
 <a href="/servers/table/">View as table</a> | <a href="/servers/list/">View as alt. list</a>
 
 <div id="servers" class="page list">
@@ -6,6 +9,7 @@ if ( count($servers_grouped) > 0 )
 {
   foreach ($servers_grouped as $xen0) 
   {
+
     echo '<div class="server xen0">';
     echo '<h1>'.$xen0['xen0']->name.'</h1>';
     $hardware = unserialize($xen0['xen0']->hardware);

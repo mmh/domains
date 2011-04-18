@@ -45,11 +45,15 @@ function getGroupedByType()
   {
     if ( is_null( $server->parent_id ) && $server->type == 'xen0' )
     {
-      $groupedServers[ $server->id ]['xen0'] = $server;
+      $groupedServers['virtual'][ $server->id ]['xen0'] = $server;
     }
     if ( !is_null( $server->parent_id ) && $server->type == 'xenu' )
     {
-      $groupedServers[ $server->parent_id ]['xenu'][] = $server;
+      $groupedServers['virtual'][ $server->parent_id ]['xenu'][] = $server;
+    }
+    if ( $server->type == 'physical' )
+    {
+      $groupedServers['physical'] = $server;
     }
   }
 

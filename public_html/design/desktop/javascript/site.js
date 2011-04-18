@@ -94,7 +94,14 @@ $(document).ready(function() {
     });
   });
 
-  $(".tablesorter").tablesorter({widgets: ['zebra']});
+  $(".tablesorter").tablesorter({
+    headers: {
+               1: {
+                    sorter: 'ipAddress' 
+                  }
+             },
+    widgets: ['zebra']
+  });
 
   $(".tooltip_trigger").tooltip().dynamic({ bottom: { direction: 'down', bounce: true } });
 });
