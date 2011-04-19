@@ -27,7 +27,11 @@ if (!empty($vhosts[0]))
   $hostStats['vhosts'] = $vhosts;
 }
 
-$hostStats['disk'] = diskInfo();
+$hostStats['disk']['partitions'] = partitionInfo();
+if ($hostStats['virtual'] == 'xen0') 
+{
+  $hostStats['disk']['physical'] = physicalDiskInfo();
+}
 
 if ($hostStats['operatingsystem'] == "Debian") 
 {
@@ -41,9 +45,39 @@ function aptUpdates()
   return explode("\n",$aptget);
 }
 
-function diskInfo()
+/**
+ * Gets model info from disks if hdparm is installed (and disks are named /dev/sd[a-z])
+ *
+ * @return array
+ * @author Henrik Farre <hf@bellcom.dk>
+ **/
+function physicalDiskInfo()
 {
-  $df = trim(shell_exec("df -H | egrep -v '^Filesystem|tmpfs|cdrom|udev' | awk '{ print \"device=\" $1 \"&mountpoint=\" $6 \"&disktotal=\" $2 \"&diskfree=\" $4 }'"));
+  $disks = array();
+  if (is_executable('/sbin/hdparm'))
+  {
+    foreach ( glob('/dev/sd[a-z]') as $disk )
+    {
+      $output = trim(shell_exec('/sbin/hdparm -i '. $disk ));
+      $lines  = explode("\n",$output);
+      foreach ( $lines as $line )
+      {
+        $line = trim($line);
+        if ( strpos($line,'Model=') !== false  )
+        {
+          parse_str( implode('&',explode(', ',$line)), $result );
+          $disks[$disk] = $result;
+          break; // only want Model info
+        }
+      }
+    }
+  }
+  return $disks;
+}
+
+function partitionInfo()
+{
+  $df = trim(shell_exec("df -H | egrep -v '^Filesystem|Filsystem|tmpfs|cdrom|udev' | awk '{ print \"device=\" $1 \"&mountpoint=\" $6 \"&disktotal=\" $2 \"&diskfree=\" $4 \"&diskused=\" $5 }'"));
   $dfLines = explode("\n", $df);
   foreach ($dfLines as $line)
   {
