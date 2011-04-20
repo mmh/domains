@@ -144,7 +144,8 @@ class ajaxHandler implements mvc\ActionHandler
               $owner = '';
               if ( !empty($owners) )
               {
-                $owner = ' owned by '. array_shift($owners)->name .' ';
+                $o = array_shift($owners);
+                $owner = ' owned by <a href="'. sprintf( mvc\retrieve('config')->sugarAccountUrl,  $o->account_id ) .'">'. $o->name .'</a> ';
               }
 
               $desc = '<td>'. 
