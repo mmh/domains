@@ -9,6 +9,7 @@ Er der noget TODO i på github som er bedre end en tekstfil?
 * [NEW] domains project that need a new name..  "pointy" siger ulrik
 * [BUG] Sortering af servere?
 
+* [NEW] Valg af hvilke kolonner der skal vises i oversigterne
 * [NEW] visning af uptime på serveroversigten
 * [NEW] visning af diskinfo. overvej en god måde at vise de 4 ting vi har pr device. måske som et disk icon pr device, med info ved mouseover
 * [NEW] visning af apt upgrade info på serveroversigten. vis bare antallet af pakker som skal opgraderes, og listen ved mouseover. evt med forskellige farver alt efter hvor mange det er
