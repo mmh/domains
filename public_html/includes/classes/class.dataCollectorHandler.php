@@ -30,6 +30,11 @@ class dataCollectorHandler implements mvc\ActionHandler
       'cpu'      => $data['processor0'],
       );
 
+    if ( isset($data['disk']['partitions']) )
+    {
+      error_log(__LINE__.':'.__FILE__.' '.print_r($data['disk'],1)); // hf@bellcom.dk debugging
+    }
+
     $server->kernel_release = $data['kernelrelease'];
     $server->os             = $data['lsbdistid'];
     $server->os_release     = $data['lsbdistrelease'];
