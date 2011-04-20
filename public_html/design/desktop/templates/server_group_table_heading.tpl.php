@@ -9,6 +9,8 @@
                 <th class="arch">Arch</th>
                 <th class="cpu_count">CPU Count</th>
                 <th class="memory">Memory</th>
+                <th class="harddrives">Harddrives</th>
+                <th class="partitions">Partitions</th>
                 <th class="actions">Actions</th>
                 <th class="comment">Comment</th>
               </tr>

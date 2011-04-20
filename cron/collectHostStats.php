@@ -56,6 +56,7 @@ function physicalDiskInfo()
   $disks = array();
   if (is_executable('/sbin/hdparm'))
   {
+    // TODO: support old IDE devices hd[a-z]
     foreach ( glob('/dev/sd[a-z]') as $disk )
     {
       $output = trim(shell_exec('/sbin/hdparm -i '. $disk ));
@@ -63,11 +64,21 @@ function physicalDiskInfo()
       foreach ( $lines as $line )
       {
         $line = trim($line);
+        
+        // only want Model info
         if ( strpos($line,'Model=') !== false  )
         {
-          parse_str( implode('&',explode(', ',$line)), $result );
+          $clean  = array();
+          $fields = explode(', ',$line);
+          foreach ( $fields as $field )
+          {
+            list($key,$value) = explode('=',$field);
+            $clean[] = trim( $key ).'='.trim( $value );
+          }
+          $str = implode('&',$clean);
+          parse_str( $str , $result );
           $disks[$disk] = $result;
-          break; // only want Model info
+          break;
         }
       }
     }
@@ -77,7 +88,8 @@ function physicalDiskInfo()
 
 function partitionInfo()
 {
-  $df = trim(shell_exec("df -H | egrep -v '^Filesystem|Filsystem|tmpfs|cdrom|udev' | awk '{ print \"device=\" $1 \"&mountpoint=\" $6 \"&disktotal=\" $2 \"&diskfree=\" $4 \"&diskused=\" $5 }'"));
+  // -TP means: include filesystem type and use POSIX portable format, which means that long device names will stay on one line 
+  $df = trim(shell_exec("df -TP -x tmpfs | egrep -v '^Filesystem|Filsystem' | awk '{ print \"device=\" $1 \"&filesystem=\" $2 \"&disktotal=\" $3 \"&diskfree=\" $5 \"&diskused=\" $4 \"&capacity=\" $6 \"&mountpoint=\" $7 }'"));
   $dfLines = explode("\n", $df);
   foreach ($dfLines as $line)
   {

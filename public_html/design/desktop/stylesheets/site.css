@@ -145,7 +145,8 @@ th {
     background-image: url('../images/archlinux-logo.png');
   }
 
-  #servers.list .actions img {
+  #servers.list .actions img,
+  #servers.list .partitions img {
     display: block;
     padding: 0;
     margin: 0;
@@ -166,9 +167,24 @@ th {
     background-repeat: no-repeat;
   }
 
+  #servers.list .hardware.partitions,
   #servers.list .hardware.error {
     background-image: none;
     padding-left: 0;
+  }
+
+  #servers.list .hardware.partitions .harddrive {
+    float: left;
+    margin-right: 1em;
+  }
+
+  #servers.list .hardware.partitions .harddrive.warning {
+    background-image: url('../images/harddrive.png');
+    background-repeat: no-repeat;
+  }
+
+  #servers.list .hardware.partitions .harddrive.warning img {
+    margin: 2px 0 0 8px;
   }
 
   #servers.list th.name {
@@ -184,7 +200,7 @@ th {
     width: 5em;
   }
   #servers.list th.os_kernel {
-    width: 7em;
+    width: 7.5em;
   }
   #servers.list th.arch {
     width: 4em;
@@ -193,6 +209,9 @@ th {
     width: 5em;
   }
   #servers.list th.memory {
+    width: 6em;
+  }
+  #servers.list th.partitions {
     width: 6em;
   }
   #servers.list th.actions {
@@ -282,10 +301,16 @@ th {
   /* tooltips */
   .tooltip {
     display:none;
-    height:70px;
-    width:160px;
+    /*height:70px;*/
+    /*width:160px;*/
     padding:1em;
-    border: 1px solid #000;
+    border:3px solid rgba(0,0,0,0);
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+    -webkit-box-shadow:0 0 18px rgba(0,0,0,0.4);
+    -moz-box-shadow:0 0 18px rgba(0,0,0,0.4);
+    box-shadow:0 0 18px rgba(0,0,0,0.4);
     background-color:#fff;
     color: #000;
   }

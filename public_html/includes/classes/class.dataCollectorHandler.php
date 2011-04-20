@@ -32,7 +32,7 @@ class dataCollectorHandler implements mvc\ActionHandler
 
     if ( isset($data['disk']['partitions']) )
     {
-      error_log(__LINE__.':'.__FILE__.' '.print_r($data['disk'],1)); // hf@bellcom.dk debugging
+      $hardware['partitions'] = $data['disk']['partitions'];
     }
 
     $server->kernel_release = $data['kernelrelease'];
@@ -43,6 +43,71 @@ class dataCollectorHandler implements mvc\ActionHandler
     $server->type           = $data['virtual'];
     $server->comment        = $server->comment; // keep existing comment - should be dropped when schema is frozen
     $serverID = R::store($server);
+
+    if ( isset($data['disk']['physical']) )
+    {
+      foreach ( $data['disk']['physical'] as $disk )
+      {
+        $drive = R::findOne("harddrive", "serial_no=?", array($disk['SerialNo']));
+        if ( empty($drive) )
+        {
+          $drive = R::dispense('harddrive');
+          $drive->created     = mktime();
+          $drive->updated     = mktime();
+          $drive->is_active   = true;
+
+          $brand = ( isset($disk['brand']) ? $disk['brand'] : 'Unknown' );
+
+          // Try an educated guess
+          if ( $brand == 'Unknown' )
+          {
+            $found = false;
+            if ( !$found && substr($disk['Model'], 0, 2) == 'ST')
+            {
+              $brand = 'Seagate';
+              $found = true;
+            }
+            if ( !$found && substr($disk['Model'], 0, 2) == 'IC')
+            {
+              $brand = 'IBM';
+              $found = true;
+            }
+            if ( !$found && substr($disk['Model'], 0, 3) == 'WDC')
+            {
+              $brand = 'Western Digital';
+              $found = true;
+            }
+            if ( !$found && substr($disk['Model'], 0, 7) == 'TOSHIBA')
+            {
+              $brand = 'Toshiba';
+              $found = true;
+            }
+            if ( !$found && substr($disk['Model'], 0, 7) == 'SAMSUNG')
+            {
+              $brand = 'Samsung';
+              $found = true;
+            }
+            if ( !$found && substr($disk['Model'], 0, 6) == 'MAXTOR')
+            {
+              $brand = 'Maxtor';
+              $found = true;
+            }
+          }
+
+          $drive->brand       = $brand;
+          $drive->model       = $disk['Model'];
+          $drive->serial_no   = $disk['SerialNo'];
+          $drive->fw_revision = $disk['FwRev'];
+        }
+        else
+        {
+          $drive->updated = mktime();
+        }
+
+        R::store($drive);
+        R::associate($server,$drive);
+      }
+    }
 
     if ( $server->type === 'xen0' && isset($data['domUs']) && !empty($data['domUs']) )
     {
