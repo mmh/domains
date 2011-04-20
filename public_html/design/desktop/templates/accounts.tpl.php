@@ -8,6 +8,10 @@
     <input type="hidden" name="account_id" value="" id="accountID"/>
     
     <br />
+    <label for="domain_filter">Domain filter:</label>
+    <input type="text" name="domain_filter" value="" id="domainFilter"/>
+    <div class="hidden" id="smartcase">Smartcase enabled</div>
+    <br />
 
     <label for="domains">Domains</label>
     <select name="domains[]" id="domains" size="20" multiple="multiple">
@@ -18,7 +22,6 @@ foreach ($domains as $domain)
 }
 ?>
     </select>
-
     <br />
 
     <input type="submit" name="actionSubmit" value="Tilføj" id="submit"/>   

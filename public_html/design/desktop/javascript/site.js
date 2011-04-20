@@ -116,6 +116,51 @@ $(document).ready(function() {
     });
   });
 
+  var domains = {
+    config : {
+      domainsHtml : ''
+    }
+  };
+
+  $("#domainFilter").keyup(function() {
+             if ( domains.config.domainsHtml.length === 0 )
+             {
+               domains.config.domainsHtml = $('#domains option');
+             }
+             var input = $("#domainFilter").val();
+             var name = '';
+
+             // smart case detection :)
+             var hasUpperCase = false;
+             if ( input != input.toLowerCase() )
+             {
+               hasUpperCase = true;
+               $("#smartcase").show();
+             }
+             else
+             {
+               $("#smartcase").hide();
+             }
+
+             // TODO: should not be called on every keypress
+             $("#domains").html(domains.config.domainsHtml);
+             $("#domains option").each(function() {
+                if ( !hasUpperCase )
+                {
+                  name = $(this).text().toLowerCase();
+                }
+                else
+                {
+                  name = $(this).text();
+                }
+                if ( name.indexOf( input ) == -1 )
+                {
+                  // have to use remove() instead of hide(), because arrow down keypress in the case list will still select the hidden elements
+                  $(this).remove();
+                }
+             });
+           });
+
   $(".tablesorter").tablesorter({
     headers: {
                1: {
@@ -133,6 +178,6 @@ function setMessage(msg,type)
   $("#messages").toggle();  
   $("#messages").addClass(type);
   $("#messages").html(msg);
-  $("#messages").fadeOut(2000);    
+  $("#messages").fadeOut(6000);    
   $("#messages").addClass(type);
 }

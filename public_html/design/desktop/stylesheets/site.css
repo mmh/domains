@@ -393,3 +393,7 @@ th {
     color: #cbcbcb;
     text-decoration: line-through;
   }
+
+.hidden {
+  display: none;
+} 
