@@ -70,3 +70,39 @@ function getAll()
 {
   return R::find('server');
 }
+
+/**
+ * Returns an array contaning which fields is enabled for a given view 
+ *
+ * @return array 
+ * @author Henrik Farre <hf@bellcom.dk>
+ **/
+function getEnabledFields( $view )
+{
+  if ( isset($_COOKIE['enabledFields']) )
+  {
+    $enabledFields = unserialize( $_COOKIE['enabledFields'] );
+    if ( isset($enabledFields[$view]) )
+    {
+      return $enabledFields[$view];
+    }
+  }
+
+  // Return all
+  $availableFields = array(
+    'name'       => true,
+    'ip'         => true,
+    'os'         => true,
+    'os_release' => true,
+    'os_kernel'  => true,
+    'arch'       => true,
+    'cpu_count'  => true,
+    'memory'     => true,
+    'harddrives' => true,
+    'partitions' => true,
+    'actions'    => true,
+    'comment'    => true,
+  );
+
+  return $availableFields;
+}

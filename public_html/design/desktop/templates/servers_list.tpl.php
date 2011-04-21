@@ -1,9 +1,9 @@
 <div id="servers" class="page list">
 <?php
 use MiMViC as mvc;  
-if ( count($servers_grouped) > 0 )
+if ( count($serversGrouped) > 0 )
 {
-  foreach ($servers_grouped as $type => $group) 
+  foreach ($serversGrouped as $type => $group) 
   {
     switch ($type) 
     {
@@ -11,17 +11,18 @@ if ( count($servers_grouped) > 0 )
         foreach ($group as $xen0)
         {
           $data = array();
+          $data['enabledFields'] = $enabledFields;
           echo '<table class="tablesorter">';
-          mvc\render($designPath.'templates/server_group_table_heading.tpl.php', $data);
+          mvc\render('design/desktop/templates/server_group_table_heading.tpl.php', $data);
           echo '<tbody>';
 
           $data['server'] = $xen0['xen0'];
-          mvc\render($designPath.'templates/server_table_row.tpl.php', $data);
+          mvc\render('design/desktop/templates/server_table_row.tpl.php', $data);
 
           foreach ($xen0['xenu'] as $xenu) 
           {
             $data['server'] = $xenu;
-            mvc\render($designPath.'templates/server_table_row.tpl.php', $data);
+            mvc\render('design/desktop/templates/server_table_row.tpl.php', $data);
           }
 
           echo '</tbody>
@@ -30,12 +31,13 @@ if ( count($servers_grouped) > 0 )
         break;
       case 'physical':
           $data = array();
+          $data['enabledFields'] = $enabledFields;
           echo '<table class="tablesorter">';
-          mvc\render($designPath.'templates/server_group_table_heading.tpl.php', $data);
+          mvc\render('design/desktop/templates/server_group_table_heading.tpl.php', $data);
           echo '<tbody>';
 
           $data['server'] = $group;
-          mvc\render($designPath.'templates/server_table_row.tpl.php', $data);
+          mvc\render('design/desktop/templates/server_table_row.tpl.php', $data);
 
           echo '</tbody>
             </table>';

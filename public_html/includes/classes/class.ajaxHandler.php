@@ -344,6 +344,46 @@ class ajaxHandler implements mvc\ActionHandler
         );
 
         break;
+      case 'serverList':
+        $availableFields = array(
+          'name'       => true,
+          'ip'         => true,
+          'os'         => true,
+          'os_release' => true,
+          'os_kernel'  => true,
+          'arch'       => true,
+          'cpu_count'  => true,
+          'memory'     => true,
+          'harddrives' => true,
+          'partitions' => true,
+          'actions'    => true,
+          'comment'    => true,
+          );
+        $enabledFields = array();
+
+        foreach ( $_GET['field'] as $key => $value )
+        {
+          if ( isset($availableFields[$key]) )
+          {
+            $enabledFields[$key] = true;
+          }
+        }
+        
+        setcookie('enabledFields', serialize( array( 'servers' => $enabledFields) ), time()+3600, '/' );
+
+        $data['enabledFields'] = $enabledFields;
+        $data['serversGrouped'] = getGroupedByType();
+        ob_start();
+        mvc\render('design/desktop/templates/servers_list.tpl.php', $data);
+        $content = ob_get_clean();
+
+          $msg = array(
+            'msg'      => 'ok',
+            'msg_type' => 'error',
+            'error'    => false,
+            'content'  => $content,
+          );
+        break;
       default:
           $msg = array(
             'msg'      => 'Unknown action',

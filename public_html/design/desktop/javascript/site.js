@@ -73,6 +73,30 @@ $(document).ready(function() {
     });
   });
 
+  $("#fieldSelector form").submit(function(e) {
+    e.preventDefault();
+    var formData = $(this).serialize();
+    var ajaxUrl  = $(this).attr('action');
+    $.ajax({
+      url: ajaxUrl,
+      data: formData,
+      dataType: 'json',
+      success: function(data){
+        if (data.error)
+        {
+          setMessage(data.msg,data.msg_type);
+        }
+        else
+        {
+          $("#servers").fadeOut();
+          $("#servers table").remove();
+          $("#servers").html(data.content);
+          $("#servers").fadeIn();
+        }
+      }
+    });
+  });
+
   $(".ajaxRequest").click(function(e) {
     e.preventDefault();
 

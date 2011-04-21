@@ -48,7 +48,8 @@ class contentHandler implements mvc\ActionHandler
         break;
 
       case 'servers':
-        $data['servers_grouped'] = getGroupedByType();
+        $data['enabledFields']  = getEnabledFields('servers');
+        $data['serversGrouped'] = getGroupedByType();
         mvc\render($designPath.'templates/servers_list.tpl.php', $data);
         break;
 

@@ -146,6 +146,7 @@ th {
   }
 
   #servers.list .actions img,
+  #servers.list .harddrives img,
   #servers.list .partitions img {
     display: block;
     padding: 0;
@@ -167,12 +168,14 @@ th {
     background-repeat: no-repeat;
   }
 
+  #servers.list .hardware.harddrives,
   #servers.list .hardware.partitions,
   #servers.list .hardware.error {
     background-image: none;
     padding-left: 0;
   }
 
+  #servers.list .hardware.harddrives img, 
   #servers.list .hardware.partitions .harddrive {
     float: left;
     margin-right: 1em;
@@ -209,6 +212,9 @@ th {
     width: 5em;
   }
   #servers.list th.memory {
+    width: 6em;
+  }
+  #servers.list th.harddrives {
     width: 6em;
   }
   #servers.list th.partitions {

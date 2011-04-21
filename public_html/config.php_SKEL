@@ -1,5 +1,6 @@
 <?php
 return (object) array(
+    'sugarAccountUrl'  => "http://SUGARDOMAIN/index.php?module=Accounts&action=DetailView&record=%s",
     'sugarSoapAddress' => "http://SUGARDOMAIN/soap.php",
     'sugarLogin'       => "LOGIN",
     'sugarPassword'    => "PASSWORD",
