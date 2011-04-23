@@ -1,7 +1,5 @@
 TODO
 
-Er der noget TODO i på github som er bedre end en tekstfil?
-
 * [BUG] domain table should contain one row per domain. is_active and dns_info can be different depending on what server the domain is associated with
         - Domains bør deles op i: domain -> vhost -> server, en vhost findes på 1 server, men et domæne kan være i flere vhosts
         - domains tabellen bør indeholde en entry pr. domain pga forskellige options pr domæne
