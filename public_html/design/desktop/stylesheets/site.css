@@ -37,7 +37,7 @@ th {
   .header .menu li {
     float: left;
     margin: 0;
-    padding: 0.2em 0.5em;
+    padding: 0.4em 0.6em;
 	list-style: none;
 	display: inline;
     border: 1px solid #000;
@@ -51,6 +51,7 @@ th {
     border-top-right-radius: 3px;
     position:relative;
     top: 1px;
+    color: #cbcbcb;
   }
 
   .header .menu li.active {
@@ -62,7 +63,12 @@ th {
   }
 
   .header .menu li a {
+    color: #cbcbcb;
     text-decoration: none;
+  }
+
+  .header .menu li.active a {
+    color: #000;
   }
 
   .page ul {
@@ -343,7 +349,7 @@ th {
 
   #facebox .content {
     display:table;
-    width: 370px;
+    /*width: 370px;*/
     padding: 10px;
     background: #fff;
     -webkit-border-radius:4px;
@@ -420,6 +426,10 @@ th {
     width: 260px;
   }
 
+  #facebox h1:first-child {
+    margin-top: 0;
+  }
+
   .domains.list .inactive a {
     color: #cbcbcb;
     text-decoration: line-through;
@@ -428,3 +438,41 @@ th {
 .hidden {
   display: none;
 } 
+
+#facebox .sortableListContainer {
+  float: left;
+  width: 155px;
+}
+
+#facebox .sortableListContainer.last {
+  margin-left: 30px;
+}
+
+#avaliableFields, 
+#enabledFields { 
+  list-style-type: none;
+  margin: 5px 0;
+  padding: 10px 0 0 0;
+  border: 1px solid #cbcbcb;
+  min-height: 30px;
+}
+
+#avaliableFields li, 
+#enabledFields li { 
+  margin: 0 10px 10px 10px;
+  padding: 5px;
+  width: 120px;
+  border: 1px solid #000;
+  background-color: #fff;
+}
+
+#avaliableFields li {
+  color: #cbcbcb;
+  border: 1px dotted #cbcbcb;
+}
+
+#avaliableFields li:hover, 
+#enabledFields li:hover { 
+  cursor: move;
+}
+.ui-state-highlight { height: 1em; line-height: 1.2em; }

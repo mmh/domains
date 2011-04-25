@@ -74,6 +74,7 @@ function getAll()
 /**
  * Returns an array contaning which fields is enabled for a given view 
  *
+ * @param string $view
  * @return array 
  * @author Henrik Farre <hf@bellcom.dk>
  **/
@@ -89,19 +90,37 @@ function getEnabledFields( $view )
   }
 
   // Return all
+  $availableFields = getAvaliableFields($view);
+
+  return $availableFields;
+}
+
+/**
+ * Returns all avaliable fields for an given view
+ *
+ * @todo: use view var to select
+ * @param string $view
+ * @return array 
+ * @author Henrik Farre <hf@bellcom.dk>
+ **/
+function getAvaliableFields( $view )
+{
   $availableFields = array(
-    'name'       => true,
-    'ip'         => true,
-    'os'         => true,
-    'os_release' => true,
-    'os_kernel'  => true,
-    'arch'       => true,
-    'cpu_count'  => true,
-    'memory'     => true,
-    'harddrives' => true,
-    'partitions' => true,
-    'actions'    => true,
-    'comment'    => true,
+    'name'             => 'Name',
+    'int_ip'           => 'IP (internal)',
+    'ext_ip'           => 'IP (external)',
+    'uptime'           => 'Uptime',
+    'os'               => 'OS',
+    'os_release'       => 'OS release',
+    'software_updates' => 'Software updates',
+    'kernel_release'   => 'Kernel',
+    'arch'             => 'Arch',
+    'cpu_count'        => 'CPU count',
+    'memory'           => 'Memory',
+    'harddrives'       => 'Harddrives',
+    'partitions'       => 'Partitions',
+    'actions'          => 'Actions',
+    'comment'          => 'Comments',
   );
 
   return $availableFields;

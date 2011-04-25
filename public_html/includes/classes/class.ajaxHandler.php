@@ -5,6 +5,12 @@ class ajaxHandler implements mvc\ActionHandler
 {
   public function exec($params)
   {
+    $msg = array(
+      'msg'      => 'No data returned',
+      'msg_type' => 'error',
+      'error'    => true,
+      'content'  => '',
+    );
     switch ($params['action']) 
     {
       case 'getAccount':
@@ -46,7 +52,7 @@ class ajaxHandler implements mvc\ActionHandler
           $domain = R::load( 'domain', $id );
           R::associate( $owner, $domain );
 
-          $otherDomainsDefinedInVhost = R::find("domain","vhost_group_key = ?",array($domain->vhost_group_key));
+          $otherDomainsDefinedInVhost = R::find("domain","apache_vhost_id = ?",array($domain->apache_vhost_id));
           foreach ($otherDomainsDefinedInVhost as $otherDomain) 
           {
             if ( $otherDomain->type === 'name' )
@@ -74,16 +80,30 @@ class ajaxHandler implements mvc\ActionHandler
       case 'getDomains':
         $serverID = (int) $_GET['serverID'];
         $server = R::load("server",$serverID);
-        $domains = R::related($server,'domain');
+
+        $linker = mvc\retrieve('beanLinker');
+        $vhostIDs = $linker->getKeys($server,'apache_vhost');
+
+        $domains = array();
+        foreach ($vhostIDs as $ID )
+        {
+          $domains = array_merge( $domains, R::find('domain', 'apache_vhost_id=?',array($ID)) );
+        }
 
         if ( !empty($domains) )
         {
-          $html = '<div class="domains list">';
+          $html = '<h1>Domains in vhosts on server (excluding www aliases)</h1><div class="domains list">';
           foreach ($domains as $domain) 
           {
+            // ignore www aliases
+            if ( $domain->sub == 'www' && $domain->type == 'alias')
+            {
+              continue;
+            }
+            // TODO: dns_info is missing
             $html .= '<div class="domain">
   <div class="status">'. (!empty($domain->dns_info) ? '<img src="/design/desktop/images/error.png" title="'.$domain->dns_info.'" class="icon"/>' : '').'</div>
-  <div class="name'. ($domain->is_active ? '' : ' inactive')  .'"><a href="http://'.$domain->name.'">'. $domain->name .'</a></div>
+  <div class="name'. ($domain->is_active ? '' : ' inactive')  .'">'. (($domain->type == 'alias') ? '- ' : '') .'<a href="http://'.$domain->getFQDN().'">'. $domain->getFQDN() .'</a></div>
 <br class="cls"/>
 </div>';
           }
@@ -266,16 +286,20 @@ class ajaxHandler implements mvc\ActionHandler
         {
           case 'domains':
             $results = R::find( "domain", "updated < ?", array( $ts ) );
+            foreach ( $results as $domain )
+            {
+              $content[] = $domain->getFQDN();
+            }
             break;
           case 'servers':
             $results = R::find( "server", "updated < ?", array( $ts ) );
+            foreach ( $results as $result )
+            {
+              $content[] = $result->name;
+            }
             break;
         }
 
-        foreach ( $results as $result )
-        {
-          $content[] = $result->name;
-        }
 
         if ( empty($content) )
         {
@@ -344,42 +368,41 @@ class ajaxHandler implements mvc\ActionHandler
         );
 
         break;
-      case 'serverList':
-        $availableFields = array(
-          'name'       => true,
-          'ip'         => true,
-          'os'         => true,
-          'os_release' => true,
-          'os_kernel'  => true,
-          'arch'       => true,
-          'cpu_count'  => true,
-          'memory'     => true,
-          'harddrives' => true,
-          'partitions' => true,
-          'actions'    => true,
-          'comment'    => true,
-          );
+      case 'setEnabledFields':
+
+        $type = $_GET['type'];
+        $availableFields = getAvaliableFields($type);
         $enabledFields = array();
 
-        foreach ( $_GET['field'] as $key => $value )
+        foreach ( $_GET['field'] as $key )
         {
           if ( isset($availableFields[$key]) )
           {
-            $enabledFields[$key] = true;
+            $enabledFields[$key] = $availableFields[$key];
           }
         }
         
-        setcookie('enabledFields', serialize( array( 'servers' => $enabledFields) ), time()+3600, '/' );
-
-        $data['enabledFields'] = $enabledFields;
-        $data['serversGrouped'] = getGroupedByType();
+        setcookie('enabledFields', serialize( array( $type => $enabledFields) ), time()+36000, '/' );
+        $msg = array(
+          'msg'      => 'ok',
+          'msg_type' => 'ok',
+          'error'    => false,
+          'content'  => '',
+        );
+        break;
+      case 'getServerList':
+        $data['hasFieldSelector'] = true;
+        $data['avaliableFields']  = getAvaliableFields('servers');
+        $data['enabledFields']    = getEnabledFields('servers');
+        $data['serversGrouped']   = getGroupedByType();
+        $data['template'] = 'design/desktop/templates/servers_list.tpl.php';
         ob_start();
-        mvc\render('design/desktop/templates/servers_list.tpl.php', $data);
+        mvc\render($data['template'], $data);
         $content = ob_get_clean();
 
           $msg = array(
             'msg'      => 'ok',
-            'msg_type' => 'error',
+            'msg_type' => 'ok',
             'error'    => false,
             'content'  => $content,
           );

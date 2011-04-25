@@ -73,30 +73,6 @@ $(document).ready(function() {
     });
   });
 
-  $("#fieldSelector form").submit(function(e) {
-    e.preventDefault();
-    var formData = $(this).serialize();
-    var ajaxUrl  = $(this).attr('action');
-    $.ajax({
-      url: ajaxUrl,
-      data: formData,
-      dataType: 'json',
-      success: function(data){
-        if (data.error)
-        {
-          setMessage(data.msg,data.msg_type);
-        }
-        else
-        {
-          $("#servers").fadeOut();
-          $("#servers table").remove();
-          $("#servers").html(data.content);
-          $("#servers").fadeIn();
-        }
-      }
-    });
-  });
-
   $(".ajaxRequest").click(function(e) {
     e.preventDefault();
 
@@ -185,6 +161,51 @@ $(document).ready(function() {
              });
            });
 
+  $("#showFieldSelector").click(function(e){
+    e.preventDefault();
+
+    $(document).bind('close.facebox', function(){
+      // TODO: only if sorting was changed 
+      getPageContent('/service/ajax/getServerList/json/','',$("#servers"), false);
+      // TODO: double code, and not with dynamic columns
+      $(".tablesorter").tablesorter({
+        headers: {
+                   1: {
+                        sorter: 'ipAddress' 
+                      }
+                 },
+        widgets: ['zebra']
+      });
+      $(document).unbind('close.facebox');
+    });
+
+    $.facebox({ div: '#fieldSelector' });
+    $( "#enabledFields, #avaliableFields" ).sortable({
+      connectWith: ".connectedSortable",
+      placeholder: "ui-state-highlight",
+      update: function(event, ui) {
+        if ( event.target.id === 'enabledFields' )
+        {
+          var fields = $(this).sortable('serialize', { expression: /(.+)=(.+)/ });
+          $.ajax({
+            url: '/service/ajax/setEnabledFields/json/?type=servers',
+            data: fields,
+            dataType: 'json',
+            success: function(data){
+              if (data.error)
+              {
+                setMessage(data.msg,data.msg_type);
+              }
+            }
+          });
+        }
+      }
+      /*stop: function() {
+      }*/
+    }).disableSelection();
+  });
+
+  // TODO: only works on server list table, and not with dynamic columns
   $(".tablesorter").tablesorter({
     headers: {
                1: {
@@ -203,5 +224,25 @@ function setMessage(msg,type)
   $("#messages").addClass(type);
   $("#messages").html(msg);
   $("#messages").fadeOut(6000);    
-  $("#messages").addClass(type);
+}
+
+function getPageContent( url, params, dest, async )
+{
+  var asyncParam = typeof(async) != 'undefined' ? async : true;
+  $.ajax({
+    url: url,
+    async: asyncParam,
+    data: params,
+    dataType: 'json',
+    success: function(data){
+      if (data.error)
+      {
+        setMessage(data.msg,data.msg_type);
+      }
+      else
+      {
+        dest.html(data.content);
+      }
+    }
+  });
 }

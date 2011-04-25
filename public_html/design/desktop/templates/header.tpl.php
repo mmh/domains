@@ -8,7 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Domains n' servers</title>
     <link href="/<?php echo $designPath;?>stylesheets/reset.css" rel="stylesheet" type="text/css" />
-    <link href="/<?php echo $designPath;?>stylesheets/jquery-ui-1.8.10.custom.css" rel="stylesheet" type="text/css" />
+    <link href="/<?php echo $designPath;?>stylesheets/jquery-ui-1.8.12.custom.css" rel="stylesheet" type="text/css" />
     <link href="/<?php echo $designPath;?>stylesheets/site.css" rel="stylesheet" type="text/css" />
   </head>
   <body>

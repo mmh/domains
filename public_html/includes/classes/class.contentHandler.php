@@ -14,16 +14,9 @@ class contentHandler implements mvc\ActionHandler
     $data['module']     = $module;
     $data['view']       = $view;
     $data['designPath'] = $designPath;
-    $data['title']      = 'Page title'; // TODO: should be sat by module
-
-    mvc\render($designPath.'templates/header.tpl.php', $data);
-    mvc\render($designPath.'templates/top_menu.tpl.php', $data);
-
-    if ( mvc\retrieve('debug') )
-    {
-      $data['values']['params'] = $params;
-      mvc\render($designPath.'templates/debug.tpl.php',$data);
-    }
+    $data['title']      = '';
+    $data['uri']        = '/'.$module.'/'.$view;
+    $data['uriArray']   = array('/',$module,$view);
 
     switch ($module) 
     {
@@ -37,38 +30,61 @@ class contentHandler implements mvc\ActionHandler
           $accountToDomains[ $owner->account_id ]['owner'] = $owner;
           $accountToDomains[ $owner->account_id ]['domains'] = $domains;
         }
+        $data['title'] = 'Domains';
         $data['accountToDomains'] = $accountToDomains;
-
-        mvc\render($designPath.'templates/domains.tpl.php', $data);
+        $data['template'] = $designPath.'templates/domains.tpl.php';
         break;
 
       case 'accounts':
+        $data['title'] = 'Domains to accounts';
         $data['domains'] = getUnrelatedMainDomains();
-        mvc\render($designPath.'templates/accounts.tpl.php', $data);
+        $data['template'] = $designPath.'templates/accounts.tpl.php';
         break;
 
       case 'servers':
-        $data['enabledFields']  = getEnabledFields('servers');
-        $data['serversGrouped'] = getGroupedByType();
-        mvc\render($designPath.'templates/servers_list.tpl.php', $data);
+        $data['title'] = 'Servers';
+        $data['hasFieldSelector'] = true;
+        $data['avaliableFields']  = getAvaliableFields('servers');
+        $data['enabledFields']    = getEnabledFields('servers');
+        $data['serversGrouped']   = getGroupedByType();
+        $data['template'] = $designPath.'templates/servers_list.tpl.php';
         break;
 
       case 'search':
-        mvc\render($designPath.'templates/search.tpl.php', $data);
+        $data['title'] = 'Search';
+        $data['template'] = $designPath.'templates/search.tpl.php';
         break;
 
       case 'cleanup':
-        mvc\render($designPath.'templates/cleanup.tpl.php', $data);
+        $data['title'] = 'Cleanup';
+        $data['template'] = $designPath.'templates/cleanup.tpl.php';
         break;
 
       default:
+        $data['title'] = '404 Page not found';
+        $data['template'] = $designPath.'templates/error.tpl.php';
         $data['error'] = array(
           'code' => '404',
           'msg' => 'Page not found',
         );
-        mvc\render($designPath.'templates/error.tpl.php', $data);
         break;
     }
+
+    mvc\render($designPath.'templates/header.tpl.php', $data);
+    mvc\render($designPath.'templates/top_menu.tpl.php', $data);
+
+    if ( isset( $data['hasFieldSelector'] ) && $data['hasFieldSelector'] )
+    {
+      mvc\render($designPath.'templates/field_selector.tpl.php',$data);
+    }
+
+    if ( mvc\retrieve('debug') )
+    {
+      $data['values']['params'] = $params;
+      mvc\render($designPath.'templates/debug.tpl.php',$data);
+    }
+
+    mvc\render($data['template'],$data);
 
     mvc\render($designPath.'templates/footer.tpl.php', $data);
   }

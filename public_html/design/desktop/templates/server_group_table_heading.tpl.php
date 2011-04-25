@@ -4,7 +4,7 @@ echo '<thead>
 
 foreach ( $enabledFields as $key => $value )
 {
-  echo '<th class="'.$key.'">'.$key .'</th>';
+  echo '<th class="'.$key.'">'.$value .'</th>';
 }
 
   echo '</tr>
