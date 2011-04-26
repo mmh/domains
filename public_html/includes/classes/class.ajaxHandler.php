@@ -37,45 +37,57 @@ class ajaxHandler implements mvc\ActionHandler
         break;
       case 'accountsToDomains':
 
-        $owner = false;
-        $owner = R::findOne('owner', 'account_id=?',array( $_GET['account_id'] ));
-        if ( $owner === false )
+        if ( empty($_GET['account_id']) || empty($_GET['domains']))
         {
-          $owner = R::dispense("owner");
-          $owner->name = $_GET['account_name'];
-          $owner->account_id = $_GET['account_id'];
-          $id = R::store($owner);
+          $msg = array(
+            'msg'      => 'Some fields are missing',
+            'msg_type' => 'error',
+            'error'    => true,
+            'content'  => '',
+          );
         }
-
-        foreach ($_GET['domains'] as $id ) 
+        else
         {
-          $domain = R::load( 'domain', $id );
-          R::associate( $owner, $domain );
-
-          $otherDomainsDefinedInVhost = R::find("domain","apache_vhost_id = ?",array($domain->apache_vhost_id));
-          foreach ($otherDomainsDefinedInVhost as $otherDomain) 
+          $owner = false;
+          $owner = R::findOne('owner', 'account_id=?',array( $_GET['account_id'] ));
+          if ( !( $owner instanceof RedBean_OODBBean ) )
           {
-            if ( $otherDomain->type === 'name' )
-            {
-              continue;
-            }
-            R::associate( $owner, $otherDomain );
+            $owner = R::dispense("owner");
+            $owner->name = $_GET['account_name'];
+            $owner->account_id = $_GET['account_id'];
+            $id = R::store($owner);
           }
-        }
 
-        $domains = getUnrelatedMainDomains();
-        $html = '';
-        foreach ($domains as $domain) 
-        {
-          $html .= '<option value="'.$domain->id.'">'.$domain->name.'</option>';
-        }
+          foreach ($_GET['domains'] as $id ) 
+          {
+            $domain = R::load( 'domain', $id );
+            R::associate( $owner, $domain );
 
-        $msg = array(
-          'msg'      => $owner->name .' set as owner of domains',
-          'msg_type' => 'ok',
-          'error'    => false,
-          'content'  => $html,
-        );
+            $otherDomainsDefinedInVhost = R::find("domain","apache_vhost_id = ?",array($domain->apache_vhost_id));
+            foreach ($otherDomainsDefinedInVhost as $otherDomain) 
+            {
+              if ( in_array( $otherDomain->id, $_GET['domains'] ) )
+              {
+                continue;
+              }
+              R::associate( $owner, $otherDomain );
+            }
+          }
+
+          $domains = getUnrelatedMainDomains();
+          $html = '';
+          foreach ($domains as $domain) 
+          {
+            $html .= '<option value="'.$domain->id.'">'.$domain->name.'</option>';
+          }
+
+          $msg = array(
+            'msg'      => $owner->name .' set as owner of domains',
+            'msg_type' => 'ok',
+            'error'    => false,
+            'content'  => $html,
+          );
+        }
         break;
       case 'getDomains':
         $serverID = (int) $_GET['serverID'];
@@ -102,10 +114,10 @@ class ajaxHandler implements mvc\ActionHandler
             }
             // TODO: dns_info is missing
             $html .= '<div class="domain">
-  <div class="status">'. (!empty($domain->dns_info) ? '<img src="/design/desktop/images/error.png" title="'.$domain->dns_info.'" class="icon"/>' : '').'</div>
-  <div class="name'. ($domain->is_active ? '' : ' inactive')  .'">'. (($domain->type == 'alias') ? '- ' : '') .'<a href="http://'.$domain->getFQDN().'">'. $domain->getFQDN() .'</a></div>
-<br class="cls"/>
-</div>';
+              <div class="status">'. (!empty($domain->dns_info) ? '<img src="/design/desktop/images/error.png" title="'.$domain->dns_info.'" class="icon"/>' : '').'</div>
+              <div class="name'. ($domain->is_active ? '' : ' inactive')  .'">'. (($domain->type == 'alias') ? '- ' : '') .'<a href="http://'.$domain->getFQDN().'">'. $domain->getFQDN() .'</a></div>
+              <br class="cls"/>
+              </div>';
           }
           $html .= '</div>';
 
@@ -152,8 +164,8 @@ class ajaxHandler implements mvc\ActionHandler
               $desc = '<td></td><td>'.$result->name .'</td><td>type: '. $result->type  .' ip: '. $result->ip .'</td>';
               break;
             case 'domain':
-              $servers = R::related( $result, 'server' );
               $owners  = R::related( $result, 'owner' );
+              $servers = R::related( $result, 'server' );
               $serverDesc = array();
               foreach ($servers as $server) 
               {
@@ -195,8 +207,8 @@ class ajaxHandler implements mvc\ActionHandler
         if ( empty($content) )
         {
           $msg = array(
-            'msg'      => 'ok',
-            'msg_type' => 'No servers found',
+            'msg'      => 'No servers found',
+            'msg_type' => 'ok',
             'error'    => true,
             'content'  => '',
           );
@@ -212,11 +224,11 @@ class ajaxHandler implements mvc\ActionHandler
         }
         break;
       case 'missingFieldsOnServer':
-        
+
         $servers = R::find( "server");
         $content = array();
         $allowedMissing = array( 'comment' );
-        
+
         foreach ( $servers as $server ) 
         {
           $missingFields = array();
@@ -250,7 +262,7 @@ class ajaxHandler implements mvc\ActionHandler
 
         $domains = R::find( "domain", "is_active=?",array(false));
         $content = array();
-        
+
         foreach ( $domains as $domain )
         {
           $server    = R::load( "server", $domain->server_id );
@@ -260,8 +272,8 @@ class ajaxHandler implements mvc\ActionHandler
         if ( empty($content) )
         {
           $msg = array(
-            'msg'      => 'ok',
-            'msg_type' => 'No inactive domains found',
+            'msg'      => 'No inactive domains found',
+            'msg_type' => 'ok',
             'error'    => true,
             'content'  => '',
           );
@@ -304,8 +316,8 @@ class ajaxHandler implements mvc\ActionHandler
         if ( empty($content) )
         {
           $msg = array(
-            'msg'      => 'ok',
-            'msg_type' => 'No '. $type .' not updated the last 3 days',
+            'msg'      => 'No '. $type .' not updated the last 3 days',
+            'msg_type' => 'ok',
             'error'    => true,
             'content'  => '',
           );
@@ -330,17 +342,17 @@ class ajaxHandler implements mvc\ActionHandler
         {
           $content = '<form action="/service/ajax/saveServerComment/json/?serverID='.$serverID.'" method="post" id="serverCommentForm">
             <p>
-              <textarea name="comment" rows="10" cols="50">'. $server->comment .'</textarea><br/>
-              <input type="submit" name="serverCommentSaveAction" value="Save" />
+            <textarea name="comment" rows="10" cols="50">'. $server->comment .'</textarea><br/>
+            <input type="submit" name="serverCommentSaveAction" value="Save" />
             </p>
             </form';
 
-            $msg = array(
-              'msg'      => 'ok',
-              'msg_type' => 'ok',
-              'error'    => false,
-              'content'  => $content,
-            );
+          $msg = array(
+            'msg'      => 'ok',
+            'msg_type' => 'ok',
+            'error'    => false,
+            'content'  => $content,
+          );
         }
         else
         {
@@ -381,7 +393,7 @@ class ajaxHandler implements mvc\ActionHandler
             $enabledFields[$key] = $availableFields[$key];
           }
         }
-        
+
         setcookie('enabledFields', serialize( array( $type => $enabledFields) ), time()+36000, '/' );
         $msg = array(
           'msg'      => 'ok',
@@ -400,20 +412,20 @@ class ajaxHandler implements mvc\ActionHandler
         mvc\render($data['template'], $data);
         $content = ob_get_clean();
 
-          $msg = array(
-            'msg'      => 'ok',
-            'msg_type' => 'ok',
-            'error'    => false,
-            'content'  => $content,
-          );
+        $msg = array(
+          'msg'      => 'ok',
+          'msg_type' => 'ok',
+          'error'    => false,
+          'content'  => $content,
+        );
         break;
       default:
-          $msg = array(
-            'msg'      => 'Unknown action',
-            'msg_type' => 'error',
-            'error'    => true,
-            'content'  => '',
-          );
+        $msg = array(
+          'msg'      => 'Unknown action',
+          'msg_type' => 'error',
+          'error'    => true,
+          'content'  => '',
+        );
         break;
     };  
     die( json_encode( $msg ) );
