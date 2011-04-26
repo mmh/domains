@@ -149,6 +149,7 @@ function parseVhosts()
       if ( strpos($line,'<virtualhost') !== false )
       {  
         $vhost = array();
+        $aliases = array();
         $vhost['filename'] = $site;
       }  
 
