@@ -67,6 +67,10 @@ th {
     text-decoration: none;
   }
 
+  .header .menu li a:hover {
+    color: #000;
+  }
+
   .header .menu li.active a {
     color: #000;
   }
@@ -184,12 +188,13 @@ th {
   #servers.list .hardware.harddrives img, 
   #servers.list .hardware.partitions .harddrive {
     float: left;
-    margin-right: 1em;
+    margin-right: 14px;
   }
 
   #servers.list .hardware.partitions .harddrive.warning {
     background-image: url('../images/harddrive.png');
     background-repeat: no-repeat;
+    margin-right: 6px;
   }
 
   #servers.list .hardware.partitions .harddrive.warning img {
@@ -265,6 +270,10 @@ th {
   }
 
   #messages.ok {
+    background-color: #00ce00;
+  }
+
+  #messages.loading {
     background-color: #00ce00;
   }
 
