@@ -53,12 +53,12 @@ foreach ( $enabledFields as $key => $value )
           $capacity = str_replace('%','', $part['capacity'] );
           $msg = '';
           $img = '';
-          if ( $capacity > 40 )
+          if ( $capacity > 80 )
           {
             $msg = 'Partition is more than 80% full<br/>';
             $img = 'information';
           }
-          if ( $capacity > 60 )
+          if ( $capacity > 90 )
           {
             $msg = 'Partition is more than 90% full<br/>';
             $img = 'error';
