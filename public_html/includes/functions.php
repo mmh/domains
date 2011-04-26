@@ -9,6 +9,7 @@
 function getUnrelatedMainDomains()
 {
   $allDomains = R::find('domain');
+  $unrelatedDomains = array();
 
   foreach ( $allDomains as $domain )
   {
