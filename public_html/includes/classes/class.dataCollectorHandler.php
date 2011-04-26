@@ -7,7 +7,7 @@ class dataCollectorHandler implements mvc\ActionHandler
   public function exec($params)
   {
     $data = unserialize( base64_decode( $_POST['data'] ) );
-    $linker = mvc\retrieve();
+    $linker = mvc\retrieve('beanLinker');
 
     if ( $data['hostname'] == null || empty( $data['hostname'] ) )
     {
