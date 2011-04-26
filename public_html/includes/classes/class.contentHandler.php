@@ -21,17 +21,9 @@ class contentHandler implements mvc\ActionHandler
     switch ($module) 
     {
       case 'domains':
-        $accountToDomains = array();
-        $owners = R::find('owner');
-
-        foreach ( $owners as $owner ) 
-        {
-          $domains = R::related( $owner, 'domain' );
-          $accountToDomains[ $owner->account_id ]['owner'] = $owner;
-          $accountToDomains[ $owner->account_id ]['domains'] = $domains;
-        }
+        $domains = R::find('domain');
         $data['title'] = 'Domains';
-        $data['accountToDomains'] = $accountToDomains;
+        $data['domains'] = $domains;
         $data['template'] = $designPath.'templates/domains.tpl.php';
         break;
 
