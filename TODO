@@ -1,5 +1,12 @@
 TODO
 
+* [BUG] Domains:
+        Brug http://tablesorter.com/docs/example-option-text-extraction.html til at sortere på links
+* [BUG] Search: 
+        viser ikke server når man søger efter domæne
+        owner search virker ikke
+* [NEW] Opdater comments felt med det samme
+* [NEW] Vist max X karaktere i comment felt, hvis der er flere brug tooltip
 * [BUG] Samling af bugs relatered til ændring af kolonner:
         ajax actions i server list virker ikke efter ændring af kolonner
         #fieldSelector bliver ikke opdateret efter ajax kald
@@ -34,5 +41,5 @@ TODO
 * [NEW] Få adskildt passwords og sensitivt data i en fil for sig selv som kan excludes fra git
 * Pænere visning af de domæner hvor DNS peger forkert
 * [BUG] Knytning af vhostgroup til account fejler nogle gange
-* Få rullet collectHostStats.php ud overalt  
+* Få rullet collectHostStats.php ud overalt
 * Benytte optimeret udgave som er MINIMALT HURTIGERE  
