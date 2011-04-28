@@ -419,6 +419,38 @@ class ajaxHandler implements mvc\ActionHandler
           'content'  => $content,
         );
         break;
+      case 'getFieldList':
+        // TODO: should not be hardcoded
+        $avaliableFields  = getAvaliableFields('servers');
+        $enabledFields    = getEnabledFields('servers');
+        $avaliableLi = '';
+        $enabledLi   = '';
+        $enabledFieldKeys = array_keys($enabledFields);
+
+        foreach ( $avaliableFields as $key => $prettyName )
+        {
+          if (in_array($key,$enabledFieldKeys))
+          {
+            $enabledLi .= '<li id="field='.$key.'">'.$prettyName.'</li>';
+          }
+          else
+          {
+            $avaliableLi .= '<li id="field='.$key.'">'.$prettyName.'</li>';
+          }
+        }
+        die( '<div class="sortableListContainer first">
+          <h2>Enabled fields</h2>
+          <ul class="connectedSortable" id="enabledFields">
+          '.$enabledLi.'
+          </ul>
+          </div>
+          <div class="sortableListContainer last">
+          <h2>Avaliable fields</h2>
+          <ul class="connectedSortable" id="avaliableFields">
+          '.$avaliableLi.'
+          </ul>
+          </div>' );
+        break;
       default:
         $msg = array(
           'msg'      => 'Unknown action',
