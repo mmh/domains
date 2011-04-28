@@ -64,7 +64,7 @@ function getUptime()
 }
 
 /**
- * Gets model info from disks if hdparm is installed (and disks are named /dev/sd[a-z])
+ * Gets model info from disks if hdparm is installed (and disks are named /dev/[h,s]d[a-z])
  *
  * @return array
  * @author Henrik Farre <hf@bellcom.dk>
@@ -75,9 +75,9 @@ function physicalDiskInfo()
   if (is_executable('/sbin/hdparm'))
   {
     // TODO: support old IDE devices hd[a-z]
-    foreach ( glob('/dev/sd[a-z]') as $disk )
+    foreach ( glob('/dev/[h,s]d[a-z]') as $disk )
     {
-      $output = trim(shell_exec('/sbin/hdparm -i '. $disk ));
+      $output = trim(shell_exec('/sbin/hdparm -i '. $disk .' 2>/dev/null'));
       $lines  = explode("\n",$output);
       foreach ( $lines as $line )
       {
