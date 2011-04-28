@@ -73,25 +73,9 @@ $(document).ready(function() {
     });
   });
 
-  $(".ajaxRequest").click(function(e) {
+  $("body").delegate(".ajaxRequest",'click',function(e) {
     e.preventDefault();
-
-    var url = this.href;
-
-    $.ajax({
-      url: url,
-      dataType: 'json',
-      success: function(data){
-        if (data.error)
-        {
-          setMessage(data.msg,data.msg_type);
-        }
-        else
-        {
-          $.facebox(data.content);
-        }
-      }
-    });
+    ajaxRequest( this.href, {}, 'facebox');
   });
 
   $("body").delegate("#facebox form","submit", function(e){
@@ -161,25 +145,18 @@ $(document).ready(function() {
              });
            });
 
-  $("#showFieldSelector").click(function(e){
-    e.preventDefault();
-
-    $(document).bind('close.facebox', function(){
+  var faceboxCloseHandler = function() {
       // TODO: only if sorting was changed 
-      getPageContent('/service/ajax/getServerList/json/','',$("#servers"), false);
-      // TODO: double code, and not with dynamic columns
+      ajaxRequest('/service/ajax/getServerList/json/','',$("#servers"), false);
       $(".tablesorter").tablesorter({
-        headers: {
-                   1: {
-                        sorter: 'ipAddress' 
-                      }
-                 },
         widgets: ['zebra']
       });
-      $(document).unbind('close.facebox');
-    });
+      console.log('Unbinding events');
+      $(document).unbind('close.facebox',this);
+      $(document).unbind('reveal.facebox', faceboxRevealHandler );
+    };
 
-    $.facebox({ div: '#fieldSelector' });
+  var faceboxRevealHandler = function() {
     $( "#enabledFields, #avaliableFields" ).sortable({
       connectWith: ".connectedSortable",
       placeholder: "ui-state-highlight",
@@ -203,15 +180,18 @@ $(document).ready(function() {
       /*stop: function() {
       }*/
     }).disableSelection();
+  };
+
+
+  $("#showFieldSelector").click(function(e){
+    e.preventDefault();
+    console.log('Binding events');
+    $(document).bind('close.facebox', faceboxCloseHandler );
+    $(document).bind('reveal.facebox', faceboxRevealHandler );
+    $.facebox({ ajax: '/service/ajax/getFieldList/html/' });
   });
 
-  // TODO: only works on server list table, and not with dynamic columns
   $(".tablesorter").tablesorter({
-    headers: {
-               1: {
-                    sorter: 'ipAddress' 
-                  }
-             },
     widgets: ['zebra']
   });
 
@@ -220,28 +200,38 @@ $(document).ready(function() {
 
 function setMessage(msg,type)
 {
-  $("#messages").toggle();  
+  //$("#messages").toggle();  
   $("#messages").addClass(type);
+  $("#messages").slideDown();
   $("#messages").html(msg);
   $("#messages").fadeOut(6000);    
 }
 
-function getPageContent( url, params, dest, async )
+function ajaxRequest( url, params, dest, async )
 {
+  console.log("Ajaxrequest, url: "+url+" dest: "+dest);
   var asyncParam = typeof(async) != 'undefined' ? async : true;
+  var showInFacebox = ( dest === 'facebox' ? true : false );
   $.ajax({
     url: url,
     async: asyncParam,
     data: params,
     dataType: 'json',
-    success: function(data){
+    success: function(data) {
       if (data.error)
       {
         setMessage(data.msg,data.msg_type);
       }
       else
       {
-        dest.html(data.content);
+        if ( showInFacebox )
+        {
+          $.facebox(data.content);
+        }
+        else
+        {
+          dest.html(data.content);
+        }
       }
     }
   });
