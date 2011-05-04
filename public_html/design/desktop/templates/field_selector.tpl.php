@@ -1,1 +1,1 @@
-<a href="#" id="showFieldSelector">Select Displayed fields</a>
+<a href="#" id="showFieldSelector">Select Displayed fields</a> (beta)

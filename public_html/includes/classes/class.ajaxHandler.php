@@ -152,39 +152,91 @@ class ajaxHandler implements mvc\ActionHandler
           $query = '%'.$query;
         }
 
-        $results = R::find($type, 'name LIKE ?',array($query));
+        $initialResults = R::find($type, 'name LIKE ?',array($query));
+        $finalResults = array();
 
-        $json = array();
+        $domainResults = array();
 
-        foreach ($results as $result )
+        foreach ($initialResults as $result )
         {
+          $formattedResult = new StdClass;
           switch ($type) 
           {
             case 'server':
-              $desc = '<td></td><td>'.$result->name .'</td><td>type: '. $result->type  .' ip: '. $result->ip .'</td>';
+              $formattedResult = (object) array(
+                'id' => $result->id,
+                'label' => $result->name,
+                'type' => $type,
+                'desc' => '<td></td><td>'.$result->name .'</td><td>type: '. $result->type  .' internal ip: '. $result->int_ip .'</td>'
+                );
+              $finalResults[] = $formattedResult;
               break;
             case 'domain':
               $owners  = R::related( $result, 'owner' );
-              $servers = R::related( $result, 'server' );
-              $serverDesc = array();
-              foreach ($servers as $server) 
-              {
-                $serverDesc[] = $server->name;
-              }
+              $linker = mvc\retrieve('beanLinker');
+              $vhost = $linker->getBean($result,'apache_vhost');
+              $server = $linker->getBean($vhost,'server');
 
-              // there should only be one owner
-              $owner = '';
-              if ( !empty($owners) )
+              if ( !isset( $domainResults[ $result->name ] ) )
               {
-                $o = array_shift($owners);
-                $owner = ' owned by <a href="'. sprintf( mvc\retrieve('config')->sugarAccountUrl,  $o->account_id ) .'">'. $o->name .'</a> ';
+                $domainResults[ $result->name ] = array();
+                $domainResults[ $result->name ]['domains'] = array();
+                $domainResults[ $result->name ]['owners']  = array();
+                $domainResults[ $result->name ]['servers'] = array();
               }
-
-              $desc = '<td>'. 
-                (!empty($result->dns_info) ? '<img src="/design/desktop/images/error.png" title="'.$result->dns_info.'" class="icon"/> ' : '') .'</td><td><a'.($result->is_active ? '' : ' class="inactive"').' href="http://'.$result->name.'">'. $result->name .'</a></td><td>'. $owner .'exist on server'. ( (count($serverDesc)>0) ? 's' : '') .': '. implode(',',$serverDesc).'</td>';
+              
+              $domainResults[ $result->name ]['domains'][] = $result;
+              $domainResults[ $result->name ]['owners'] = array_merge( $domainResults[ $result->name ]['owners'], $owners );
+              $domainResults[ $result->name ]['servers'][] = $server;
               break;
           }
-          $json[] = array( 'id' => $result->id, 'label' => $result->name, 'value' => 'snaps', 'desc' => '<tr class="line '.$type.'">'.$desc.'</tr>' );
+        }
+
+        if ( $type == 'domain' && !empty($domainResults) )
+        {
+          $owners = array();
+          $servers = array();
+          $id = '';
+
+          foreach ( $domainResults as $name => $result )
+          {
+            $id = $name;
+
+            if ( !empty($result['owners']) )
+            {
+              foreach ( $result['owners'] as $owner )
+              {
+                if ( isset($owners[$owner->account_id]) )
+                {
+                  continue;
+                }
+                $owners[$owner->account_id] = '<a href="'. sprintf( mvc\retrieve('config')->sugarAccountUrl,  $owner->account_id ) .'">'. $owner->name .'</a>';
+              }
+              $owner = 'owned by '.implode(',',$owners);
+            }
+
+            if ( !empty($result['servers']) )
+            {
+              foreach ( $result['servers'] as $server )
+              {
+                $servers[] = $server->name;
+              }
+              $server = 'exists on '.implode(',',$servers);
+            }
+            $formattedResult = (object) array(
+              'id' => $id,
+              'label' => $id,
+              'type' => $type,
+              'desc' => '<td></td><td>'.$id .'</td><td>'. $owner .' '. $server .'</td>'
+            );
+            $finalResults[] = $formattedResult;
+          } 
+        }
+
+        $json = array();
+        foreach ( $finalResults as $result )
+        {
+          $json[] = array( 'id' => $result->id, 'label' => $result->label, 'value' => '', 'desc' => '<tr class="line '.$result->type.'">'.$result->desc.'</tr>' );
         }
 
         die (json_encode($json));
@@ -246,7 +298,7 @@ class ajaxHandler implements mvc\ActionHandler
           }
           if ( !empty($missingFields) )
           {
-            $content[] = $server->id.' is missing: '. implode(', ',$missingFields);
+            $content[] = 'Id: '. $server->id . (!empty($server->name) ? ' ('.$server->name.')' : '' ) .' is missing: '. implode(', ',$missingFields);
           }
         }
 
